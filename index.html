@@ -2,193 +2,204 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vietlott Pro AI - Dự Đoán Kết Quả</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vietlott AI Pro - Full Screen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
-        .dark { background-color: #121212; color: #ffffff; }
-        .ball-item {
-            animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-            opacity: 0;
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;800&display=swap');
+        
+        :root { --primary: #e11d48; }
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
-        @keyframes bounceIn {
-            from { opacity: 0; transform: scale(0.3) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+        
+        .dark { background-color: #0f172a; color: #f8fafc; }
+        .dark .glass { background: rgba(30, 41, 59, 0.7); border-color: rgba(255,255,255,0.1); }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(0,0,0,0.05); }
+
+        /* Full màn hình Mobile & iPad */
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+
+        .ball-animation {
+            animation: ballPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        .dark .glass-card {
-            background: rgba(30, 30, 30, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        @keyframes ballPop {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
         }
+
+        /* Tùy chỉnh thanh cuộn ẩn */
+        ::-webkit-scrollbar { display: none; }
+        
+        select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="bg-slate-50 transition-colors duration-300">
 
-    <nav class="p-4 flex justify-between items-center max-w-2xl mx-auto">
-        <div class="flex items-center gap-2">
-            <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white shadow-lg">
-                <i class="fas fa-bolt"></i>
-            </div>
-            <span class="font-800 text-xl tracking-tighter uppercase">Vietlott <span class="text-red-600">AI</span></span>
-        </div>
-        <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-            <i id="themeIcon" class="fas fa-moon"></i>
-        </button>
-    </nav>
-
-    <main class="max-w-2xl mx-auto p-4 space-y-6">
-        
-        <div class="glass-card p-6 rounded-3xl shadow-xl">
-            <label class="block text-sm font-semibold mb-3 opacity-70">SẢN PHẨM DỰ ĐOÁN</label>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="gameGrid">
+    <div class="app-container p-4 sm:p-8">
+        <header class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-2">
+                <div class="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-red-200">
+                    <i class="fas fa-robot text-xl"></i>
                 </div>
-        </div>
-
-        <div class="glass-card p-6 rounded-3xl shadow-xl flex flex-col gap-4">
-            <div>
-                <label class="block text-sm font-semibold mb-2 opacity-70">NGÀY SINH CỦA BẠN</label>
-                <input type="date" id="dobInput" class="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-2 outline-none focus:border-red-500 transition">
+                <div>
+                    <h1 class="font-800 text-xl leading-none uppercase tracking-tighter">Vietlott <span class="text-red-600">AI</span></h1>
+                    <span class="text-[10px] opacity-50 font-semibold tracking-widest">VERSION 2026.0</span>
+                </div>
             </div>
+            <button onclick="toggleTheme()" class="w-12 h-12 rounded-2xl glass flex items-center justify-center shadow-sm">
+                <i id="themeIcon" class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <main class="flex-grow flex flex-col justify-center gap-6">
             
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="handleGenerate('ai')" class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-red-200 dark:shadow-none transition transform active:scale-95">
-                    <i class="fas fa-brain mr-2"></i>AI PHÂN TÍCH
-                </button>
-                <button onclick="handleGenerate('dob')" class="bg-slate-800 hover:bg-black text-white font-bold py-4 rounded-2xl shadow-lg transition transform active:scale-95">
-                    <i class="fas fa-birthday-cake mr-2"></i>THEO NGÀY SINH
-                </button>
+            <div id="resultBox" class="hidden glass rounded-[2.5rem] p-8 shadow-2xl border-2 border-red-500/20 text-center scale-110 mb-8">
+                <div id="gameBadge" class="inline-block px-4 py-1 rounded-full bg-red-100 text-red-600 text-[10px] font-bold mb-4 uppercase"></div>
+                <div id="ballContainer" class="flex flex-wrap justify-center gap-3 py-4"></div>
+                <p id="aiStatus" class="text-[11px] opacity-40 italic mt-4 font-light"></p>
             </div>
-        </div>
 
-        <div id="resultBox" class="hidden glass-card p-8 rounded-3xl shadow-2xl border-2 border-red-500/20 text-center">
-            <h2 id="resultTitle" class="text-lg font-bold text-red-600 mb-6 italic uppercase tracking-widest">Đang tính toán...</h2>
-            <div id="ballContainer" class="flex flex-wrap justify-center gap-3 min-h-[60px]">
+            <div class="space-y-4">
+                <div class="glass p-2 rounded-2xl flex gap-1 overflow-x-auto no-scrollbar">
+                    <select id="gameSelect" onchange="updateUI()" class="w-full bg-transparent font-bold p-4 outline-none text-center">
+                        <option value="MEGA">Mega 6/45</option>
+                        <option value="POWER">Power 6/55</option>
+                        <option value="KENO">Keno (20 số)</option>
+                        <option value="BINGO18">Bingo 18</option>
+                        <option value="MAX3D">Max 3D</option>
+                        <option value="MAX3DPRO">Max 3D Pro</option>
+                        <option value="LOTTO535">Lotto 5/35</option>
+                    </select>
                 </div>
-            <p id="aiLog" class="mt-8 text-xs opacity-50 font-mono italic"></p>
-        </div>
-    </main>
 
-    <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
-    <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
+                <div class="glass p-5 rounded-3xl space-y-3">
+                    <label class="block text-[10px] font-800 opacity-40 uppercase ml-1">Chọn nhanh ngày sinh</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <select id="dobDay" class="bg-gray-100 dark:bg-slate-800 p-3 rounded-xl border-none outline-none text-center font-semibold"></select>
+                        <select id="dobMonth" class="bg-gray-100 dark:bg-slate-800 p-3 rounded-xl border-none outline-none text-center font-semibold"></select>
+                        <select id="dobYear" class="bg-gray-100 dark:bg-slate-800 p-3 rounded-xl border-none outline-none text-center font-semibold"></select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="generate('ai')" class="bg-slate-900 dark:bg-white dark:text-slate-900 text-white py-5 rounded-[2rem] font-bold shadow-xl active:scale-95 transition">
+                        AI PHÂN TÍCH
+                    </button>
+                    <button onclick="generate('dob')" class="bg-red-600 text-white py-5 rounded-[2rem] font-bold shadow-xl shadow-red-200 active:scale-95 transition">
+                        SỐ MAY MẮN
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center py-4 opacity-30 text-[10px] uppercase font-bold tracking-widest">
+            Data Analysis Engine © 2026
+        </footer>
+    </div>
+
+    <audio id="sfxClick" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="sfxWin" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
 
     <script>
         const GAMES = {
-            MEGA: { name: 'Mega 6/45', max: 45, count: 6, color: 'bg-red-500', icon: '6/45' },
-            POWER: { name: 'Power 6/55', max: 55, count: 6, color: 'bg-yellow-500', icon: '6/55' },
-            KENO: { name: 'Keno', max: 80, count: 20, color: 'bg-blue-500', icon: 'K' },
-            BINGO18: { name: 'Bingo 18', max: 6, count: 3, color: 'bg-pink-500', icon: 'B18' },
-            MAX3D: { name: 'Max 3D', max: 9, count: 3, color: 'bg-green-500', icon: '3D' },
-            MAX3DPRO: { name: 'Max 3D Pro', max: 9, count: 6, color: 'bg-purple-500', icon: '3DP' },
-            LOTTO535: { name: 'Lotto 5/35', max: 35, count: 5, color: 'bg-cyan-500', icon: '5/35' }
+            MEGA: { max: 45, count: 6, color: 'bg-red-600' },
+            POWER: { max: 55, count: 6, color: 'bg-orange-500' },
+            KENO: { max: 80, count: 20, color: 'bg-blue-600' },
+            BINGO18: { max: 6, count: 3, color: 'bg-pink-500' },
+            MAX3D: { max: 9, count: 3, color: 'bg-emerald-500' },
+            MAX3DPRO: { max: 9, count: 6, color: 'bg-indigo-600' },
+            LOTTO535: { max: 35, count: 5, color: 'bg-cyan-500' }
         };
 
-        let currentSelected = 'MEGA';
+        // Khởi tạo dropdown ngày sinh
+        const populateDOB = () => {
+            const d = document.getElementById('dobDay'), m = document.getElementById('dobMonth'), y = document.getElementById('dobYear');
+            for(let i=1; i<=31; i++) d.innerHTML += `<option value="${i}">${i}</option>`;
+            for(let i=1; i<=12; i++) m.innerHTML += `<option value="${i}">Tháng ${i}</option>`;
+            for(let i=2026; i>=1950; i--) y.innerHTML += `<option value="${i}">${i}</option>`;
+        };
+        populateDOB();
 
-        // Render Game Selection
-        const grid = document.getElementById('gameGrid');
-        Object.keys(GAMES).forEach(key => {
-            const btn = document.createElement('button');
-            btn.className = `p-3 rounded-xl border-2 transition text-xs font-bold ${key === 'MEGA' ? 'border-red-500 bg-red-50' : 'border-transparent bg-gray-100 dark:bg-gray-800'}`;
-            btn.id = `btn-${key}`;
-            btn.innerHTML = `<div class="opacity-50">${GAMES[key].icon}</div><div>${GAMES[key].name}</div>`;
-            btn.onclick = () => selectGame(key);
-            grid.appendChild(btn);
-        });
-
-        function selectGame(key) {
-            playSound('click');
-            triggerVibration(10);
-            document.querySelectorAll('#gameGrid button').forEach(b => b.classList.remove('border-red-500', 'bg-red-50'));
-            document.getElementById(`btn-${key}`).classList.add('border-red-500', 'bg-red-50');
-            currentSelected = key;
-        }
-
-        function toggleDarkMode() {
+        function toggleTheme() {
             document.body.classList.toggle('dark');
             const icon = document.getElementById('themeIcon');
-            icon.classList.toggle('fa-moon');
-            icon.classList.toggle('fa-sun');
-            playSound('click');
+            icon.className = document.body.classList.contains('dark') ? 'fas fa-sun' : 'fas fa-moon';
+            playSFX('sfxClick');
         }
 
-        function playSound(type) {
-            const sound = document.getElementById(type === 'click' ? 'clickSound' : 'winSound');
-            sound.currentTime = 0;
-            sound.play().catch(() => {}); // Chống lỗi trình duyệt chặn auto-play
+        function playSFX(id) {
+            const audio = document.getElementById(id);
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
         }
 
-        function triggerVibration(ms) {
-            if (navigator.vibrate) navigator.vibrate(ms);
-        }
+        function triggerVibrate(p) { if(navigator.vibrate) navigator.vibrate(p); }
 
-        function handleGenerate(mode) {
-            playSound('click');
-            triggerVibration(50);
-            
-            const dob = document.getElementById('dobInput').value;
-            if (mode === 'dob' && !dob) {
-                alert("Vui lòng chọn ngày sinh để lấy số may mắn!");
-                return;
-            }
+        function generate(mode) {
+            playSFX('sfxClick');
+            triggerVibrate(40);
 
-            const box = document.getElementById('resultBox');
+            const gameKey = document.getElementById('gameSelect').value;
+            const config = GAMES[gameKey];
             const container = document.getElementById('ballContainer');
-            const aiLog = document.getElementById('aiLog');
+            const box = document.getElementById('resultBox');
             
             box.classList.remove('hidden');
             container.innerHTML = '';
-            aiLog.innerText = "Đang xử lý thuật toán mô phỏng...";
-            document.getElementById('resultTitle').innerText = GAMES[currentSelected].name;
+            document.getElementById('gameBadge').innerText = gameKey;
+            document.getElementById('aiStatus').innerText = "Đang quét dữ liệu chu kỳ...";
 
-            // Thuật toán tạo số
-            let seed = mode === 'dob' ? new Date(dob).getTime() : Math.random() * 1000000;
-            const random = () => {
+            // Lấy hạt giống từ ngày sinh
+            let seed = Math.random() * 1000000;
+            if(mode === 'dob') {
+                const d = document.getElementById('dobDay').value;
+                const m = document.getElementById('dobMonth').value;
+                const y = document.getElementById('dobYear').value;
+                seed = parseInt(d + m + y);
+            }
+
+            const seededRandom = () => {
                 let x = Math.sin(seed++) * 10000;
                 return x - Math.floor(x);
             };
 
-            const config = GAMES[currentSelected];
-            let results = [];
-
-            while (results.length < config.count) {
-                let n;
-                if (currentSelected.includes('MAX')) {
-                    n = Math.floor(random() * 10); // 0-9
-                    results.push(n);
-                } else if (currentSelected === 'BINGO18') {
-                    n = Math.floor(random() * 6) + 1; // 1-6
-                    results.push(n);
-                } else {
-                    n = Math.floor(random() * config.max) + 1;
-                    if (!results.includes(n)) results.push(n);
-                }
+            let nums = [];
+            while(nums.length < config.count) {
+                let n = Math.floor(seededRandom() * (gameKey.includes('MAX') ? 10 : config.max)) + (gameKey.includes('MAX') ? 0 : 1);
+                if(gameKey.includes('MAX') || gameKey === 'BINGO18') nums.push(n);
+                else if(!nums.includes(n)) nums.push(n);
             }
+            if(!gameKey.includes('MAX') && gameKey !== 'BINGO18') nums.sort((a,b) => a-b);
 
-            if (!currentSelected.includes('MAX') && currentSelected !== 'BINGO18') {
-                results.sort((a, b) => a - b);
-            }
-
-            // Hiển thị bóng số
-            results.forEach((num, i) => {
+            // Render bóng số
+            nums.forEach((n, i) => {
                 setTimeout(() => {
                     const ball = document.createElement('div');
-                    ball.className = `ball-item w-10 h-10 ${config.color} text-white rounded-full flex items-center justify-center font-bold shadow-md text-sm border-2 border-white/20`;
-                    ball.innerText = num < 10 && !currentSelected.includes('MAX') ? `0${num}` : num;
+                    const size = gameKey === 'KENO' ? 'w-8 h-8 text-[10px]' : 'w-12 h-12 text-lg';
+                    ball.className = `ball-animation ${size} ${config.color} text-white rounded-full flex items-center justify-center font-bold shadow-lg border-2 border-white/20`;
+                    ball.innerText = n < 10 && !gameKey.includes('MAX') ? `0${n}` : n;
                     container.appendChild(ball);
-                    triggerVibration(20);
-                    if (i === results.length - 1) {
-                        playSound('win');
-                        aiLog.innerText = `Phân tích hoàn tất: Bộ số có tỷ lệ khớp dữ liệu lịch sử cao nhất cho ${mode === 'ai' ? 'chu kỳ này' : 'ngày sinh của bạn'}.`;
+                    triggerVibrate(20);
+                    if(i === nums.length - 1) {
+                        playSFX('sfxWin');
+                        document.getElementById('aiStatus').innerText = "Phân tích hoàn tất. Chúc bạn may mắn!";
                     }
-                }, i * 150);
+                }, i * 120);
             });
+        }
+
+        function updateUI() {
+            playSFX('sfxClick');
+            document.getElementById('resultBox').classList.add('hidden');
         }
     </script>
 </body>
