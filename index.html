@@ -6,44 +6,45 @@
     <title>Vietlott AI Trực Tiếp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { gold: '#FFD700', vRed: '#d32f2f' } } } }
-    </script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;900&display=swap');
         :root { --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom); }
+        
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         html, body { height: 100%; margin: 0; padding: 0; background-color: #000; overflow: hidden; font-family: 'Lexend', sans-serif; }
         
-        #splash { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
+        /* Splash Screen cố định */
+        #splash { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease; }
         .splash-logo { width: 180px; height: 180px; border-radius: 40px; animation: pulse 1.2s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #FFD700); } 50% { transform: scale(1.03); filter: drop-shadow(0 0 20px #FFD700); } }
 
-        .app-container { height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) 1.2rem var(--safe-bottom) 1.2rem; max-width: 500px; margin: 0 auto; opacity: 0; transition: opacity 0.4s ease; }
-        .app-visible { opacity: 1 !important; }
+        .app-container { height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) 1.2rem var(--safe-bottom) 1.2rem; max-width: 500px; margin: 0 auto; opacity: 0; visibility: hidden; transition: opacity 0.4s ease; }
+        .app-visible { opacity: 1 !important; visibility: visible !important; }
 
         .dark body { background-color: #000; color: white; }
         .light body { background-color: #f8fafc; color: #0f172a; }
 
-        .result-box { flex: 1; margin: 0.8rem 0; border-radius: 2.5rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border: 2px solid rgba(255, 215, 0, 0.5); padding: 20px; }
+        .result-box { flex: 1; margin: 0.8rem 0; border-radius: 2.5rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border: 2px solid rgba(255, 215, 0, 0.5); padding: 20px; transition: background 0.3s; }
         .dark .result-box { background: rgba(30, 30, 30, 0.6); }
-        .light .result-box { background: white; border-color: #cbd5e1; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .light .result-box { background: white; border-color: #cbd5e1; }
 
-        .bg-icon { position: absolute; width: 80%; height: 80%; top: 50%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none; z-index: 0; }
+        .bg-icon { position: absolute; width: 85%; height: 85%; top: 50%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none; z-index: 0; transition: opacity 0.3s; }
         .dark .bg-icon { opacity: 0.35; filter: contrast(1.1); }
         .light .bg-icon { opacity: 0.45; filter: contrast(1.2); }
 
-        #statusMsg { font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; z-index: 10; }
+        #statusMsg { font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; z-index: 10; margin-top: 10px; }
         .dark #statusMsg { color: #fff; }
         .light #statusMsg { color: #1e293b; }
 
-        .ball { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; width: 3rem; height: 3rem; background: #FFD700; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; z-index: 10; }
+        .ball { animation: pop 0.3s forwards; width: 3rem; height: 3rem; background: #FFD700; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; z-index: 10; }
         @keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .ctrl-btn { width: 3rem; height: 3rem; border-radius: 1rem; background: #FFD700; color: #000; display: flex; align-items: center; justify-content: center; }
-        .btn-main { background: #FFD700; color: #000; font-weight: 900; box-shadow: 4px 4px 0px #000; width: 100%; padding: 1.2rem; border-radius: 1.5rem; text-transform: uppercase; font-size: 1.2rem; }
-        .btn-sub { padding: 1rem; border-radius: 1rem; font-weight: 900; color: #fff; font-size: 10px; text-transform: uppercase; }
+        .ctrl-btn { width: 3rem; height: 3rem; border-radius: 1rem; background: #FFD700; color: #000; display: flex; align-items: center; justify-content: center; border: none; outline: none; }
+        .btn-main { background: #FFD700; color: #000; font-weight: 900; box-shadow: 4px 4px 0px #000; width: 100%; padding: 1.2rem; border-radius: 1.5rem; text-transform: uppercase; font-size: 1.2rem; border: none; }
+        .btn-sub { padding: 1rem; border-radius: 1rem; font-weight: 900; color: #fff; font-size: 10px; text-transform: uppercase; border: none; }
         
-        select { background: transparent; width: 100%; padding: 1rem; border-radius: 1rem; font-weight: 900; -webkit-appearance: none; }
+        select { background: transparent; width: 100%; padding: 1rem; border-radius: 1rem; font-weight: 900; -webkit-appearance: none; outline: none; }
         .dark select { border: 2px solid #333; color: white; background: #1a1a1a; }
         .light select { border: 2px solid #cbd5e1; color: black; background: white; }
     </style>
@@ -58,7 +59,7 @@
     <div id="appBody" class="app-container">
         <header class="py-4 flex justify-between items-center">
             <div>
-                <div class="bg-vRed px-2 py-0.5 rounded text-white font-black italic text-[9px] animate-pulse w-fit">KẾT NỐI TRỰC TIẾP</div>
+                <div class="bg-vRed px-2 py-0.5 rounded text-white font-black italic text-[9px] animate-pulse w-fit" style="background-color: #d32f2f;">KẾT NỐI TRỰC TIẾP</div>
                 <h1 class="font-900 text-xl tracking-tighter uppercase">Vietlott AI</h1>
             </div>
             <div class="flex gap-2">
@@ -67,7 +68,7 @@
             </div>
         </header>
 
-        <select id="game" class="mb-2" onchange="saveAll()">
+        <select id="game" class="mb-2" onchange="saveAppSession()">
             <option value="MEGA">MEGA 6/45</option>
             <option value="POWER">POWER 6/55</option>
             <option value="LOTTO">LOTTO 5/35</option>
@@ -87,16 +88,16 @@
         </div>
 
         <div class="grid grid-cols-3 gap-2 mb-4">
-            <select id="d" onchange="saveAll()"></select>
-            <select id="m" onchange="saveAll()"></select>
-            <select id="y" onchange="saveAll()"></select>
+            <select id="d" onchange="saveAppSession()"></select>
+            <select id="m" onchange="saveAppSession()"></select>
+            <select id="y" onchange="saveAppSession()"></select>
         </div>
 
         <div class="space-y-3 pb-4">
-            <button onclick="run('ai')" class="btn-main active:scale-95 transition-transform">AI Phân Tích</button>
+            <button id="btnAi" onclick="run('ai')" class="btn-main">AI Phân Tích</button>
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="run('dob')" class="btn-sub bg-vBlue active:scale-95 transition-transform" style="background-color: #007bff;">Số Ngày Sinh</button>
-                <button onclick="run('jackpot')" class="btn-sub bg-vRed active:scale-95 transition-transform" style="background-color: #d32f2f;">Jackpot AI</button>
+                <button id="btnDob" onclick="run('dob')" class="btn-sub" style="background-color: #007bff;">Số Ngày Sinh</button>
+                <button id="btnJackpot" onclick="run('jackpot')" class="btn-sub" style="background-color: #d32f2f;">Jackpot AI</button>
             </div>
         </div>
     </div>
@@ -105,66 +106,82 @@
     <audio id="click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
 
     <script>
-        // --- LOGIC LƯU TRỮ CHỐNG REFRESH ---
-        function saveAll() {
-            const data = {
-                game: document.getElementById('game').value,
-                balls: document.getElementById('balls').innerHTML,
-                status: document.getElementById('statusMsg').innerText,
-                d: document.getElementById('d').value,
-                m: document.getElementById('m').value,
-                y: document.getElementById('y').value,
-                theme: document.documentElement.className
-            };
-            localStorage.setItem('vietlott_cache', JSON.stringify(data));
+        // --- CƠ CHẾ LƯU TRỮ CHỐNG TREO ANDROID ---
+        const SESSION_KEY = 'vietlott_v3_stable';
+        
+        function saveAppSession() {
+            try {
+                const data = {
+                    game: document.getElementById('game').value,
+                    balls: document.getElementById('balls').innerHTML,
+                    status: document.getElementById('statusMsg').innerText,
+                    d: document.getElementById('d').value,
+                    m: document.getElementById('m').value,
+                    y: document.getElementById('y').value,
+                    isDark: document.documentElement.classList.contains('dark')
+                };
+                localStorage.setItem(SESSION_KEY, JSON.stringify(data));
+            } catch (e) { console.error("Lỗi lưu trữ"); }
         }
 
-        function restoreAll() {
-            const cached = localStorage.getItem('vietlott_cache');
-            if (!cached) return;
-            const data = JSON.parse(cached);
-            document.getElementById('game').value = data.game;
-            document.getElementById('balls').innerHTML = data.balls;
-            document.getElementById('statusMsg').innerText = data.status;
-            document.getElementById('d').value = data.d;
-            document.getElementById('m').value = data.m;
-            document.getElementById('y').value = data.y;
-            document.documentElement.className = data.theme;
-            document.getElementById('themeIcon').className = data.theme.includes('dark') ? 'fas fa-moon' : 'fas fa-sun';
+        function restoreAppSession() {
+            try {
+                const saved = localStorage.getItem(SESSION_KEY);
+                if (!saved) return false;
+                const data = JSON.parse(saved);
+                document.getElementById('game').value = data.game;
+                document.getElementById('balls').innerHTML = data.balls;
+                document.getElementById('statusMsg').innerText = data.status;
+                document.getElementById('d').value = data.d;
+                document.getElementById('m').value = data.m;
+                document.getElementById('y').value = data.y;
+                if (data.isDark) {
+                    document.documentElement.className = 'dark';
+                    document.getElementById('themeIcon').className = 'fas fa-moon';
+                } else {
+                    document.documentElement.className = 'light';
+                    document.getElementById('themeIcon').className = 'fas fa-sun';
+                }
+                return true;
+            } catch (e) { return false; }
         }
 
-        // --- PHÁO HOA ---
+        // --- PHÁO HOA TỐI GIẢN (CHỐNG TREO) ---
         const canvas = document.getElementById('fireworks');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
-        window.addEventListener('resize', resize);
-        
-        class P {
-            constructor(x,y,c) {
-                this.x=x; this.y=y; this.c=c;
-                this.v={x:(Math.random()-0.5)*6, y:(Math.random()-0.5)*6};
-                this.a=1;
-            }
-            draw() { ctx.globalAlpha=this.a; ctx.beginPath(); ctx.arc(this.x,this.y,2,0,Math.PI*2); ctx.fillStyle=this.c; ctx.fill(); }
-            update() { this.x+=this.v.x; this.y+=this.v.y; this.a-=0.02; }
-        }
+        function initCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
 
-        function boom() {
+        function triggerBoom() {
             particles = [];
-            const colors = ['#FFD700','#FF0000','#FFFFFF'];
-            for(let i=0;i<30;i++) particles.push(new P(canvas.width/2, canvas.height/2, colors[Math.floor(Math.random()*3)]));
-            function anim() {
-                ctx.clearRect(0,0,canvas.width,canvas.height);
-                particles.forEach((p,i) => { if(p.a<=0) particles.splice(i,1); else { p.update(); p.draw(); } });
-                if(particles.length>0) requestAnimationFrame(anim);
+            const colors = ['#FFD700', '#FFFFFF', '#FF3131'];
+            for(let i=0; i<25; i++) {
+                particles.push({
+                    x: canvas.width/2, y: canvas.height/2,
+                    vx: (Math.random()-0.5)*8, vy: (Math.random()-0.5)*8,
+                    a: 1, c: colors[Math.floor(Math.random()*3)]
+                });
             }
-            anim();
+            function draw() {
+                if (particles.length === 0) return;
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                particles.forEach((p, i) => {
+                    p.x += p.vx; p.y += p.vy; p.a -= 0.02;
+                    if (p.a <= 0) particles.splice(i, 1);
+                    else {
+                        ctx.globalAlpha = p.a; ctx.fillStyle = p.c;
+                        ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, 7); ctx.fill();
+                    }
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
         }
 
-        // --- CORE ---
-        function updateNet() {
+        // --- HÀM CORE ---
+        function updateNetworkState() {
             const icon = document.getElementById('netIcon');
+            if (!icon) return;
             const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
             if (conn) {
                 const type = conn.effectiveType || '';
@@ -177,72 +194,76 @@
         function manualRefresh() {
             const icon = document.getElementById('refIcon');
             icon.style.transform = "rotate(360deg)";
-            icon.style.transition = "0.5s";
-            setTimeout(() => { icon.style.transform="rotate(0deg)"; icon.style.transition="0s"; }, 500);
+            setTimeout(() => { icon.style.transform="rotate(0deg)"; }, 500);
             document.getElementById('balls').innerHTML = '<i id="netIcon" class="fas fa-satellite-dish text-gold opacity-40 text-5xl animate-pulse"></i>';
             document.getElementById('statusMsg').innerText = "Hệ thống sẵn sàng";
-            updateNet();
-            saveAll();
+            updateNetworkState();
+            saveAppSession();
         }
 
         function toggleTheme() {
             const isDark = document.documentElement.classList.toggle('dark');
             document.documentElement.classList.toggle('light');
             document.getElementById('themeIcon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
-            saveAll();
+            saveAppSession();
         }
 
-        window.onload = () => {
-            // Đổ dữ liệu ngày tháng
+        // --- KHỞI CHẠY ---
+        window.addEventListener('load', () => {
+            // Setup Selects
             const dd=document.getElementById('d'), mm=document.getElementById('m'), yy=document.getElementById('y');
             for(let i=1;i<=31;i++) dd.innerHTML+=`<option value="${i}">${i}</option>`;
             for(let i=1;i<=12;i++) mm.innerHTML+=`<option value="${i}">Tháng ${i}</option>`;
             for(let i=2026;i>=1960;i--) yy.innerHTML+=`<option value="${i}">Năm ${i}</option>`;
-            
-            restoreAll(); // Khôi phục dữ liệu chống Refresh
-            resize();
-            updateNet();
 
+            restoreAppSession();
+            initCanvas();
+            updateNetworkState();
+
+            // Mở app sau 0.8s
             setTimeout(() => {
                 document.getElementById('splash').style.opacity = '0';
                 document.getElementById('appBody').classList.add('app-visible');
-                setTimeout(() => document.getElementById('splash').style.display='none', 300);
+                setTimeout(() => { document.getElementById('splash').style.display='none'; }, 400);
             }, 800);
-        };
+        });
 
         function run(mode) {
             const field = document.getElementById('balls');
             const status = document.getElementById('statusMsg');
             field.innerHTML = '<div class="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>';
-            status.innerText = "AI đang phân tích...";
+            status.innerText = "AI đang xử lý dữ liệu...";
 
             setTimeout(() => {
                 field.innerHTML = '';
-                const g = document.getElementById('game').value;
-                let cfg = {'MEGA':45,'POWER':55,'LOTTO':35,'MAX3D':9,'MAX3DPRO':9,'KENO':80,'BINGO18':6}[g];
-                let count = {'MEGA':6,'POWER':6,'LOTTO':5,'MAX3D':3,'MAX3DPRO':6,'KENO':20,'BINGO18':3}[g];
-                let res = [];
-                let s = mode==='dob' ? parseInt(dd.value+mm.value) : Date.now();
+                const game = document.getElementById('game').value;
+                const cfg = {
+                    'MEGA': [45,6], 'POWER': [55,6], 'LOTTO': [35,5], 'MAX3D': [9,3],
+                    'MAX3DPRO': [9,6], 'KENO': [80,20], 'BINGO18': [6,3]
+                }[game];
+                
+                let nums = [];
+                let s = mode==='dob' ? parseInt(document.getElementById('d').value + document.getElementById('m').value) : Date.now();
                 const rng = () => { s=(s*16807)%2147483647; return s/2147483647; };
 
-                while(res.length < count) {
-                    let n = Math.floor(rng() * (cfg + (g.includes('MAX')?1:0))) + (g.includes('MAX')?0:1);
-                    if(g.includes('MAX') || g==='BINGO18') res.push(n);
-                    else if(!res.includes(n)) res.push(n);
+                while(nums.length < cfg[1]) {
+                    let n = Math.floor(rng() * (cfg[0] + (game.includes('MAX')?1:0))) + (game.includes('MAX')?0:1);
+                    if(game.includes('MAX') || game==='BINGO18') nums.push(n);
+                    else if(!nums.includes(n)) nums.push(n);
                 }
-                if(!g.includes('MAX') && g!=='BINGO18') res.sort((a,b)=>a-b);
+                if(!game.includes('MAX') && game!=='BINGO18') nums.sort((a,b)=>a-b);
 
-                res.forEach((n, i) => {
+                nums.forEach((n, i) => {
                     setTimeout(() => {
                         const b = document.createElement('div');
-                        b.className = `ball ${g==='KENO'?'w-8 h-8 text-[10px]':'w-12 h-12 text-lg'}`;
+                        b.className = `ball ${game==='KENO'?'w-8 h-8 text-[10px]':'w-12 h-12 text-lg'}`;
                         b.innerText = n < 10 ? '0'+n : n;
                         field.appendChild(b);
-                        if(i === res.length-1) {
-                            status.innerText = "Gợi ý may mắn hoàn tất";
-                            boom();
+                        if(i === nums.length-1) {
+                            status.innerText = "Kết quả gợi ý hoàn tất";
+                            triggerBoom();
                             try { document.getElementById('success').play(); } catch(e){}
-                            saveAll();
+                            saveAppSession();
                         }
                     }, i * 100);
                 });
