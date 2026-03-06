@@ -3,138 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#000000">
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="icon" type="image/png" href="icon.png">
-
-    <title>Vietlott AI Trực Tiếp - Bản Cao Cấp</title>
+    <title>Vietlott AI Trực Tiếp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: { gold: '#FFD700', vRed: '#d32f2f', vBlue: '#007bff' } } }
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { gold: '#FFD700', vRed: '#d32f2f' } } } }
     </script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;900&display=swap');
         :root { --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom); }
+        html, body { height: 100%; margin: 0; padding: 0; background-color: #000; overflow: hidden; font-family: 'Lexend', sans-serif; }
+        
+        #splash { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
+        .splash-logo { width: 180px; height: 180px; border-radius: 40px; animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #FFD700); } 50% { transform: scale(1.03); filter: drop-shadow(0 0 20px #FFD700); } }
 
-        html, body { 
-            height: 100%; margin: 0; padding: 0;
-            background-color: #000; overflow: hidden;
-            font-family: 'Lexend', sans-serif;
-        }
-
-        /* Splash Screen 0.8s */
-        #splash {
-            position: fixed; inset: 0; background: #000; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.3s ease;
-        }
-        .splash-logo {
-            width: 200px; height: 200px; border-radius: 40px;
-            animation: pulse-gold 1.2s infinite ease-in-out;
-        }
-        @keyframes pulse-gold {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #FFD700); }
-            50% { transform: scale(1.03); filter: drop-shadow(0 0 25px #FFD700); }
-        }
-
-        .app-container {
-            height: 100%; display: flex; flex-direction: column;
-            padding: var(--safe-top) 1.2rem var(--safe-bottom) 1.2rem;
-            max-width: 500px; margin: 0 auto; width: 100%; opacity: 0;
-            transition: opacity 0.4s ease-in;
-        }
+        .app-container { height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) 1.2rem var(--safe-bottom) 1.2rem; max-width: 500px; margin: 0 auto; opacity: 0; transition: opacity 0.4s ease; }
         .app-visible { opacity: 1 !important; }
 
         .dark body { background-color: #000; color: white; }
-        .light body { background-color: #f1f5f9; color: #0f172a; }
+        .light body { background-color: #f8fafc; color: #0f172a; }
 
-        .dark select { color: white !important; background-color: #1a1a1a !important; border: 2px solid #333; }
-        .light select { color: black !important; background-color: white !important; border: 2px solid #cbd5e1; }
+        .result-box { flex: 1; margin: 0.8rem 0; border-radius: 2.5rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border: 2px solid rgba(255, 215, 0, 0.5); padding: 20px; }
+        .dark .result-box { background: rgba(30, 30, 30, 0.6); }
+        .light .result-box { background: white; border-color: #cbd5e1; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
 
-        .result-box {
-            flex: 1; margin: 0.8rem 0; border-radius: 2.5rem;
-            position: relative; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; overflow: hidden;
-            border: 2px solid rgba(255, 215, 0, 0.5);
-            padding: 20px; transition: all 0.3s ease;
-        }
-        .dark .result-box { background: rgba(30, 30, 30, 0.4); }
-        .light .result-box { background: white; border-color: #e2e8f0; box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
-
-        .bg-icon { 
-            position: absolute; width: 80%; height: 80%;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            object-fit: contain; pointer-events: none; z-index: 0;
-        }
-        .dark .bg-icon { opacity: 0.35; filter: contrast(1.1) brightness(0.9); }
+        .bg-icon { position: absolute; width: 80%; height: 80%; top: 50%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none; z-index: 0; }
+        .dark .bg-icon { opacity: 0.35; filter: contrast(1.1); }
         .light .bg-icon { opacity: 0.45; filter: contrast(1.2); }
 
-        #statusMsg { font-weight: 900; text-shadow: 0px 2px 4px rgba(0,0,0,0.3); }
-        .dark #statusMsg { color: #FFFFFF; }
+        #statusMsg { font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; z-index: 10; }
+        .dark #statusMsg { color: #fff; }
         .light #statusMsg { color: #1e293b; }
 
-        #fireworks { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+        .ball { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; width: 3rem; height: 3rem; background: #FFD700; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; z-index: 10; }
+        @keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .ctrl-btn {
-            width: 3rem; height: 3rem; border-radius: 1rem;
-            background: #FFD700; color: #000;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: all 0.2s;
-        }
-        .ctrl-btn:active { transform: scale(0.9); }
-
-        .btn-main { background: #FFD700; color: #000; font-weight: 900; box-shadow: 4px 4px 0px #000; }
-        .btn-main:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000; }
+        .ctrl-btn { width: 3rem; height: 3rem; border-radius: 1rem; background: #FFD700; color: #000; display: flex; align-items: center; justify-content: center; }
+        .btn-main { background: #FFD700; color: #000; font-weight: 900; box-shadow: 4px 4px 0px #000; width: 100%; padding: 1.2rem; border-radius: 1.5rem; text-transform: uppercase; font-size: 1.2rem; }
+        .btn-sub { padding: 1rem; border-radius: 1rem; font-weight: 900; color: #fff; font-size: 10px; text-transform: uppercase; }
         
-        .btn-dob { background: #007bff; color: white; font-weight: 900; border-bottom: 4px solid #0056b3; }
-        .btn-jackpot { background: #d32f2f; color: white; font-weight: 900; border-bottom: 4px solid #8b1e1e; }
-
-        .ball {
-            animation: ball-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            width: 3.2rem; height: 3.2rem; background: #FFD700; color: #000;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; border: 2px solid #000; z-index: 10;
-        }
-        @keyframes ball-pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        select { -webkit-appearance: none; outline: none; }
+        select { background: transparent; width: 100%; padding: 1rem; border-radius: 1rem; font-weight: 900; -webkit-appearance: none; }
+        .dark select { border: 2px solid #333; color: white; background: #1a1a1a; }
+        .light select { border: 2px solid #cbd5e1; color: black; background: white; }
     </style>
 </head>
 <body class="dark">
 
     <div id="splash">
         <img src="icon.png" class="splash-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2313/2313982.png'">
-        <h2 class="text-gold mt-6 font-black text-xl tracking-tighter italic uppercase">Vietlott AI Trực Tiếp</h2>
+        <h2 class="text-gold mt-6 font-black italic uppercase">Vietlott AI Trực Tiếp</h2>
     </div>
 
     <div id="appBody" class="app-container">
         <header class="py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="bg-vRed px-2 py-1 rounded text-white font-black italic text-[10px] animate-pulse">KẾT NỐI TRỰC TIẾP</div>
+            <div>
+                <div class="bg-vRed px-2 py-0.5 rounded text-white font-black italic text-[9px] animate-pulse w-fit">KẾT NỐI TRỰC TIẾP</div>
                 <h1 class="font-900 text-xl tracking-tighter uppercase">Vietlott AI</h1>
             </div>
             <div class="flex gap-2">
-                <button onclick="refreshApp()" class="ctrl-btn">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-                <button onclick="toggleTheme()" class="ctrl-btn">
-                    <i id="themeIcon" class="fas fa-moon"></i>
-                </button>
+                <button onclick="manualRefresh()" class="ctrl-btn"><i class="fas fa-sync-alt" id="refIcon"></i></button>
+                <button onclick="toggleTheme()" class="ctrl-btn"><i id="themeIcon" class="fas fa-moon"></i></button>
             </div>
         </header>
 
-        <select id="game" class="w-full p-4 rounded-2xl font-900 text-lg shadow-xl mt-2" onchange="saveState()">
+        <select id="game" class="mb-2" onchange="saveAll()">
             <option value="MEGA">MEGA 6/45</option>
             <option value="POWER">POWER 6/55</option>
             <option value="LOTTO">LOTTO 5/35</option>
@@ -144,191 +77,172 @@
             <option value="BINGO18">BINGO 18</option>
         </select>
 
-        <div class="result-box text-center">
-            <canvas id="fireworks"></canvas>
+        <div class="result-box">
+            <canvas id="fireworks" style="position:absolute; inset:0; pointer-events:none; z-index:5;"></canvas>
             <img src="icon.png" class="bg-icon" onerror="this.style.display='none'">
             <div id="balls" class="flex flex-wrap justify-center gap-2 p-4 relative z-10">
                 <i id="netIcon" class="fas fa-satellite-dish text-gold opacity-40 text-5xl animate-pulse"></i>
             </div>
-            <p id="statusMsg" class="mt-2 text-[11px] uppercase tracking-[0.2em] z-10 italic">Hệ thống sẵn sàng</p>
+            <p id="statusMsg" class="mt-2 italic">Hệ thống sẵn sàng</p>
         </div>
 
-        <div class="grid grid-cols-3 gap-2">
-            <select id="d" class="p-4 rounded-xl font-bold text-center" onchange="saveState()"></select>
-            <select id="m" class="p-4 rounded-xl font-bold text-center" onchange="saveState()"></select>
-            <select id="y" class="p-4 rounded-xl font-bold text-center" onchange="saveState()"></select>
+        <div class="grid grid-cols-3 gap-2 mb-4">
+            <select id="d" onchange="saveAll()"></select>
+            <select id="m" onchange="saveAll()"></select>
+            <select id="y" onchange="saveAll()"></select>
         </div>
 
-        <div class="space-y-4 my-6">
-            <button onclick="run('ai')" class="w-full btn-main py-5 rounded-3xl text-2xl tracking-tighter uppercase">AI Phân Tích</button>
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="run('dob')" class="btn-dob py-4 rounded-2xl text-[10px] uppercase">Số Ngày Sinh</button>
-                <button onclick="run('jackpot')" class="btn-jackpot py-4 rounded-2xl text-[10px] uppercase shadow-red-500/20">Jackpot AI</button>
+        <div class="space-y-3 pb-4">
+            <button onclick="run('ai')" class="btn-main active:scale-95 transition-transform">AI Phân Tích</button>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="run('dob')" class="btn-sub bg-vBlue active:scale-95 transition-transform" style="background-color: #007bff;">Số Ngày Sinh</button>
+                <button onclick="run('jackpot')" class="btn-sub bg-vRed active:scale-95 transition-transform" style="background-color: #d32f2f;">Jackpot AI</button>
             </div>
         </div>
     </div>
 
-    <audio id="success" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
-    <audio id="click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="success" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
+    <audio id="click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
 
     <script>
-        // CÁC HÀM LƯU TRẠNG THÁI (Local Storage) ĐỂ CHỐNG REFRESH TRÊN ANDROID
-        function saveState() {
-            const state = {
+        // --- LOGIC LƯU TRỮ CHỐNG REFRESH ---
+        function saveAll() {
+            const data = {
                 game: document.getElementById('game').value,
-                ballsHTML: document.getElementById('balls').innerHTML,
+                balls: document.getElementById('balls').innerHTML,
                 status: document.getElementById('statusMsg').innerText,
                 d: document.getElementById('d').value,
                 m: document.getElementById('m').value,
                 y: document.getElementById('y').value,
                 theme: document.documentElement.className
             };
-            localStorage.setItem('vietlott_ai_state', JSON.stringify(state));
+            localStorage.setItem('vietlott_cache', JSON.stringify(data));
         }
 
-        function loadState() {
-            const saved = localStorage.getItem('vietlott_ai_state');
-            if (saved) {
-                const state = JSON.parse(saved);
-                document.getElementById('game').value = state.game;
-                document.getElementById('balls').innerHTML = state.ballsHTML;
-                document.getElementById('statusMsg').innerText = state.status;
-                document.getElementById('d').value = state.d;
-                document.getElementById('m').value = state.m;
-                document.getElementById('y').value = state.y;
-                document.documentElement.className = state.theme;
-                const icon = document.getElementById('themeIcon');
-                icon.className = state.theme.includes('dark') ? 'fas fa-moon' : 'fas fa-sun';
-            }
+        function restoreAll() {
+            const cached = localStorage.getItem('vietlott_cache');
+            if (!cached) return;
+            const data = JSON.parse(cached);
+            document.getElementById('game').value = data.game;
+            document.getElementById('balls').innerHTML = data.balls;
+            document.getElementById('statusMsg').innerText = data.status;
+            document.getElementById('d').value = data.d;
+            document.getElementById('m').value = data.m;
+            document.getElementById('y').value = data.y;
+            document.documentElement.className = data.theme;
+            document.getElementById('themeIcon').className = data.theme.includes('dark') ? 'fas fa-moon' : 'fas fa-sun';
         }
 
+        // --- PHÁO HOA ---
         const canvas = document.getElementById('fireworks');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        function resizeCanvas() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor(x, y, color) {
-                this.x = x; this.y = y; this.color = color;
-                this.velocity = { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 };
-                this.alpha = 1; this.friction = 0.95;
+        function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+        window.addEventListener('resize', resize);
+        
+        class P {
+            constructor(x,y,c) {
+                this.x=x; this.y=y; this.c=c;
+                this.v={x:(Math.random()-0.5)*6, y:(Math.random()-0.5)*6};
+                this.a=1;
             }
-            draw() { ctx.globalAlpha = this.alpha; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); }
-            update() { this.velocity.x *= this.friction; this.velocity.y *= this.friction; this.x += this.velocity.x; this.y += this.velocity.y; this.alpha -= 0.02; }
+            draw() { ctx.globalAlpha=this.a; ctx.beginPath(); ctx.arc(this.x,this.y,2,0,Math.PI*2); ctx.fillStyle=this.c; ctx.fill(); }
+            update() { this.x+=this.v.x; this.y+=this.v.y; this.a-=0.02; }
         }
 
-        function createFireworks() {
-            const colors = ['#FFD700', '#FF0000', '#FFFFFF', '#007bff'];
-            for (let i = 0; i < 40; i++) particles.push(new Particle(canvas.width/2, canvas.height/2, colors[Math.floor(Math.random() * colors.length)]));
+        function boom() {
+            particles = [];
+            const colors = ['#FFD700','#FF0000','#FFFFFF'];
+            for(let i=0;i<30;i++) particles.push(new P(canvas.width/2, canvas.height/2, colors[Math.floor(Math.random()*3)]));
+            function anim() {
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                particles.forEach((p,i) => { if(p.a<=0) particles.splice(i,1); else { p.update(); p.draw(); } });
+                if(particles.length>0) requestAnimationFrame(anim);
+            }
+            anim();
         }
 
-        function animateFireworks() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, i) => { if (p.alpha <= 0) particles.splice(i, 1); else { p.update(); p.draw(); } });
-            if (particles.length > 0) requestAnimationFrame(animateFireworks);
-        }
-
-        function updateNetworkIcon() {
+        // --- CORE ---
+        function updateNet() {
             const icon = document.getElementById('netIcon');
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            if (connection) {
-                const type = connection.type || connection.effectiveType;
-                icon.className = (type.includes('wifi')) ? "fas fa-wifi text-gold opacity-40 text-5xl animate-pulse" : "fas fa-signal text-gold opacity-40 text-5xl animate-pulse";
+            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (conn) {
+                const type = conn.effectiveType || '';
+                icon.className = (type.includes('4g') || type.includes('5g') || type.includes('cellular')) 
+                    ? "fas fa-signal text-gold opacity-40 text-5xl animate-pulse" 
+                    : "fas fa-wifi text-gold opacity-40 text-5xl animate-pulse";
             }
-            saveState();
         }
 
-        function refreshApp() {
-            haptic();
-            const btnIcon = document.querySelector('.fa-sync-alt');
-            btnIcon.style.transition = "transform 0.5s ease";
-            btnIcon.style.transform = "rotate(360deg)";
-            setTimeout(() => { btnIcon.style.transform = "rotate(0deg)"; btnIcon.style.transition = "none"; }, 500);
-            
+        function manualRefresh() {
+            const icon = document.getElementById('refIcon');
+            icon.style.transform = "rotate(360deg)";
+            icon.style.transition = "0.5s";
+            setTimeout(() => { icon.style.transform="rotate(0deg)"; icon.style.transition="0s"; }, 500);
             document.getElementById('balls').innerHTML = '<i id="netIcon" class="fas fa-satellite-dish text-gold opacity-40 text-5xl animate-pulse"></i>';
             document.getElementById('statusMsg').innerText = "Hệ thống sẵn sàng";
-            updateNetworkIcon();
-            saveState();
-        }
-
-        const dd=document.getElementById('d'), mm=document.getElementById('m'), yy=document.getElementById('y');
-        for(let i=1;i<=31;i++) dd.innerHTML+=`<option value="${i}">${i}</option>`;
-        for(let i=1;i<=12;i++) mm.innerHTML+=`<option value="${i}">Tháng ${i}</option>`;
-        for(let i=2026;i>=1960;i--) yy.innerHTML+=`<option value="${i}">Năm ${i}</option>`;
-
-        window.onload = () => {
-            loadState(); // Khôi phục dữ liệu cũ nếu có
-            updateNetworkIcon();
-            setTimeout(() => {
-                const splash = document.getElementById('splash');
-                splash.style.opacity = '0';
-                document.getElementById('appBody').classList.add('app-visible');
-                setTimeout(() => { splash.style.display = 'none'; }, 300);
-            }, 800); 
-        };
-
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function haptic() {
-            const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();
-            osc.connect(g); g.connect(audioCtx.destination);
-            osc.frequency.value = 60; g.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-            if (navigator.vibrate) navigator.vibrate(50);
-            document.getElementById('click').play().catch(()=>{});
+            updateNet();
+            saveAll();
         }
 
         function toggleTheme() {
-            haptic();
             const isDark = document.documentElement.classList.toggle('dark');
             document.documentElement.classList.toggle('light');
             document.getElementById('themeIcon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
-            saveState();
+            saveAll();
         }
 
+        window.onload = () => {
+            // Đổ dữ liệu ngày tháng
+            const dd=document.getElementById('d'), mm=document.getElementById('m'), yy=document.getElementById('y');
+            for(let i=1;i<=31;i++) dd.innerHTML+=`<option value="${i}">${i}</option>`;
+            for(let i=1;i<=12;i++) mm.innerHTML+=`<option value="${i}">Tháng ${i}</option>`;
+            for(let i=2026;i>=1960;i--) yy.innerHTML+=`<option value="${i}">Năm ${i}</option>`;
+            
+            restoreAll(); // Khôi phục dữ liệu chống Refresh
+            resize();
+            updateNet();
+
+            setTimeout(() => {
+                document.getElementById('splash').style.opacity = '0';
+                document.getElementById('appBody').classList.add('app-visible');
+                setTimeout(() => document.getElementById('splash').style.display='none', 300);
+            }, 800);
+        };
+
         function run(mode) {
-            haptic();
             const field = document.getElementById('balls');
             const status = document.getElementById('statusMsg');
-            const game = document.getElementById('game').value;
             field.innerHTML = '<div class="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>';
-            status.innerText = "AI đang phân tích dữ liệu...";
+            status.innerText = "AI đang phân tích...";
 
             setTimeout(() => {
                 field.innerHTML = '';
-                let config = {
-                    'MEGA': { max: 45, count: 6 }, 'POWER': { max: 55, count: 6 }, 'LOTTO': { max: 35, count: 5 },
-                    'MAX3D': { max: 9, count: 3, repeat: true }, 'MAX3DPRO': { max: 9, count: 6, repeat: true },
-                    'KENO': { max: 80, count: 20 }, 'BINGO18': { max: 6, count: 3, repeat: true }
-                }[game];
+                const g = document.getElementById('game').value;
+                let cfg = {'MEGA':45,'POWER':55,'LOTTO':35,'MAX3D':9,'MAX3DPRO':9,'KENO':80,'BINGO18':6}[g];
+                let count = {'MEGA':6,'POWER':6,'LOTTO':5,'MAX3D':3,'MAX3DPRO':6,'KENO':20,'BINGO18':3}[g];
+                let res = [];
+                let s = mode==='dob' ? parseInt(dd.value+mm.value) : Date.now();
+                const rng = () => { s=(s*16807)%2147483647; return s/2147483647; };
 
-                let nums = []; let seed = mode === 'dob' ? parseInt(dd.value + mm.value) : Date.now();
-                const rng = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-
-                while(nums.length < config.count) {
-                    let n = Math.floor(rng() * (config.max + (game.includes('MAX') ? 1 : 0))) + (game.includes('MAX') ? 0 : 1);
-                    if(config.repeat) nums.push(n); else if(!nums.includes(n)) nums.push(n);
+                while(res.length < count) {
+                    let n = Math.floor(rng() * (cfg + (g.includes('MAX')?1:0))) + (g.includes('MAX')?0:1);
+                    if(g.includes('MAX') || g==='BINGO18') res.push(n);
+                    else if(!res.includes(n)) res.push(n);
                 }
-                if(!config.repeat) nums.sort((a,b)=>a-b);
+                if(!g.includes('MAX') && g!=='BINGO18') res.sort((a,b)=>a-b);
 
-                nums.forEach((n, i) => {
+                res.forEach((n, i) => {
                     setTimeout(() => {
                         const b = document.createElement('div');
-                        b.className = `ball ${game === 'KENO' ? 'w-8 h-8 text-[10px]' : 'w-12 h-12 text-lg'}`;
-                        b.innerText = (game.includes('MAX') || game === 'BINGO18') ? n : (n < 10 ? '0'+n : n);
-                        if(game === 'MAX3DPRO' && i === 3) field.appendChild(document.createElement('div')).className="w-full h-1";
+                        b.className = `ball ${g==='KENO'?'w-8 h-8 text-[10px]':'w-12 h-12 text-lg'}`;
+                        b.innerText = n < 10 ? '0'+n : n;
                         field.appendChild(b);
-                        
-                        if(i === nums.length - 1) {
+                        if(i === res.length-1) {
                             status.innerText = "Gợi ý may mắn hoàn tất";
-                            document.getElementById('success').play().catch(()=>{});
-                            createFireworks(); animateFireworks();
-                            saveState(); // Lưu kết quả cuối cùng
+                            boom();
+                            try { document.getElementById('success').play(); } catch(e){}
+                            saveAll();
                         }
                     }, i * 100);
                 });
