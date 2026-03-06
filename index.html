@@ -18,7 +18,7 @@
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: { extend: { colors: { gold: '#FFD700', vRed: '#d32f2f', vBlue: '#0056b3' } } }
+            theme: { extend: { colors: { gold: '#FFD700', vRed: '#d32f2f', vBlue: '#007bff' } } }
         }
     </script>
 
@@ -30,7 +30,7 @@
             height: 100%; margin: 0; padding: 0;
             background-color: #000; overflow: hidden;
             font-family: 'Lexend', sans-serif;
-            color: white;
+            transition: background-color 0.3s;
         }
 
         /* Splash Screen */
@@ -43,8 +43,8 @@
             animation: pulse-gold 2s infinite ease-in-out;
         }
         @keyframes pulse-gold {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #FFD700); }
-            50% { transform: scale(1.1); filter: drop-shadow(0 0 40px #FFD700); }
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px #FFD700); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 45px #FFD700); }
         }
 
         .app-container {
@@ -55,32 +55,38 @@
         }
         .app-visible { opacity: 1 !important; }
 
-        .dark select { color: white !important; background-color: #1a1a1a !important; border-color: #333; }
-        .light select { color: black !important; background-color: white !important; border-color: #ddd; }
-        .light body { background-color: #f1f5f9 !important; color: #1e293b; }
+        /* FIX MÀU CHỮ LIGHT MODE / DARK MODE */
+        .dark body { background-color: #000; color: white; }
+        .light body { background-color: #f8fafc; color: #0f172a; }
+
+        .dark select { color: white !important; background-color: #1a1a1a !important; border: 2px solid #333; }
+        .light select { color: black !important; background-color: white !important; border: 2px solid #cbd5e1; }
 
         .btn-main { background: #FFD700; color: #000; font-weight: 900; box-shadow: 4px 4px 0px #000; transition: 0.1s; }
         .btn-main:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000; }
         
-        .btn-dob { background: #007bff; color: white; font-weight: 900; border-bottom: 4px solid #004a99; }
+        .btn-dob { background: #007bff; color: white; font-weight: 900; border-bottom: 4px solid #0056b3; }
         .btn-jackpot { background: #d32f2f; color: white; font-weight: 900; border-bottom: 4px solid #8b1e1e; }
 
-        /* KHUNG KẾT QUẢ TỐI ƯU LOGO */
+        /* KHUNG KẾT QUẢ TỐI ƯU LOGO VÀ BỐ CỤC */
         .result-box {
-            flex: 1; margin: 1rem 0; border-radius: 2.5rem; border: 2px solid rgba(255, 215, 0, 0.3);
-            position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;
+            flex: 1; margin: 1rem 0; border-radius: 2.5rem;
+            position: relative; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; overflow: hidden;
             background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            padding: 20px;
         }
+        .light .result-box { background: white; border: 2px solid #e2e8f0; box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); }
+
         .bg-icon { 
             position: absolute; 
-            max-width: 85%; 
-            max-height: 85%; 
-            width: auto;
-            height: auto;
-            opacity: 0.15; 
+            width: 70%; height: 70%;
+            opacity: 0.12; 
             object-fit: contain; 
             pointer-events: none;
             z-index: 0;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
         }
 
         .ball {
@@ -88,40 +94,47 @@
             width: 3.2rem; height: 3.2rem; background: #FFD700; color: #000;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-weight: 900; border: 2px solid #000; z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         @keyframes ball-pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        select { -webkit-appearance: none; outline: none; }
     </style>
 </head>
-<body>
+<body class="dark:text-white text-slate-900">
 
     <div id="splash">
         <img src="icon.png" class="splash-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2313/2313982.png'">
-        <h2 class="text-gold mt-10 font-black text-3xl tracking-tighter">VIETLOTT LIVE AI</h2>
+        <h2 class="text-gold mt-10 font-black text-3xl tracking-tighter italic">VIETLOTT LIVE AI</h2>
     </div>
 
     <div id="appBody" class="app-container">
         <header class="py-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <div class="bg-vRed px-2 py-1 rounded text-white font-black italic text-sm animate-pulse">LIVE</div>
+                <div class="bg-vRed px-2 py-1 rounded text-white font-black italic text-xs animate-pulse">LIVE CONNECT</div>
                 <h1 class="font-900 text-xl tracking-tighter uppercase">Vietlott AI</h1>
             </div>
-            <button onclick="toggleTheme()" class="w-12 h-12 rounded-2xl bg-gold flex items-center justify-center shadow-lg">
+            <button onclick="toggleTheme()" class="w-12 h-12 rounded-2xl bg-gold flex items-center justify-center shadow-lg active:scale-90 transition-transform">
                 <i id="themeIcon" class="fas fa-moon text-black"></i>
             </button>
         </header>
 
-        <select id="game" class="w-full p-5 rounded-2xl border-4 border-gold font-900 text-xl shadow-xl mt-4">
+        <select id="game" class="w-full p-5 rounded-2xl font-900 text-xl shadow-xl mt-4">
             <option value="MEGA">MEGA 6/45</option>
             <option value="POWER">POWER 6/55</option>
             <option value="LOTTO">LOTTO 5/35</option>
             <option value="MAX3D">MAX 3D</option>
+            <option value="MAX3DPRO">MAX 3D PRO</option>
             <option value="KENO">KENO (20 SỐ)</option>
             <option value="BINGO18">BINGO 18</option>
         </select>
 
-        <div class="result-box">
+        <div class="result-box text-center">
             <img src="icon.png" class="bg-icon" onerror="this.style.display='none'">
-            <div id="balls" class="flex flex-wrap justify-center gap-2 p-4"></div>
+            <div id="balls" class="flex flex-wrap justify-center gap-2 p-4 relative z-10">
+                <i class="fas fa-wifi text-gold opacity-10 text-5xl animate-pulse"></i>
+            </div>
+            <p id="statusMsg" class="mt-4 text-[10px] font-bold uppercase tracking-[0.3em] opacity-40 z-10 italic">Hệ thống phân tích thời gian thực</p>
         </div>
 
         <div class="grid grid-cols-3 gap-2">
@@ -131,10 +144,10 @@
         </div>
 
         <div class="space-y-4 my-6">
-            <button onclick="run('ai')" class="w-full btn-main py-6 rounded-3xl text-2xl">AI PHÂN TÍCH</button>
+            <button onclick="run('ai')" class="w-full btn-main py-6 rounded-3xl text-2xl tracking-tighter">AI PHÂN TÍCH</button>
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="run('dob')" class="btn-dob py-5 rounded-2xl text-sm">NGÀY SINH</button>
-                <button onclick="run('jackpot')" class="btn-jackpot py-5 rounded-2xl text-sm shadow-red-500/50">JACKPOT AI</button>
+                <button onclick="run('dob')" class="btn-dob py-5 rounded-2xl text-xs sm:text-sm uppercase tracking-tighter">Số Ngày Sinh</button>
+                <button onclick="run('jackpot')" class="btn-jackpot py-5 rounded-2xl text-xs sm:text-sm uppercase shadow-red-500/50">Jackpot AI</button>
             </div>
         </div>
     </div>
@@ -143,6 +156,7 @@
     <audio id="click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
 
     <script>
+        // Splash logic
         window.onload = () => {
             setTimeout(() => {
                 document.getElementById('splash').style.display = 'none';
@@ -165,19 +179,23 @@
         function toggleTheme() {
             haptic();
             const isDark = document.documentElement.classList.toggle('dark');
+            document.documentElement.classList.toggle('light');
             document.getElementById('themeIcon').className = isDark ? 'fas fa-moon text-black' : 'fas fa-sun text-black';
         }
 
+        // Setup dates
         const dd=document.getElementById('d'), mm=document.getElementById('m'), yy=document.getElementById('y');
         for(let i=1;i<=31;i++) dd.innerHTML+=`<option value="${i}">${i}</option>`;
-        for(let i=1;i<=12;i++) mm.innerHTML+=`<option value="${i}">T${i}</option>`;
-        for(let i=2026;i>=1960;i--) yy.innerHTML+=`<option value="${i}">${i}</option>`;
+        for(let i=1;i<=12;i++) mm.innerHTML+=`<option value="${i}">Tháng ${i}</option>`;
+        for(let i=2026;i>=1960;i--) yy.innerHTML+=`<option value="${i}">Năm ${i}</option>`;
 
         function run(mode) {
             haptic();
             const field = document.getElementById('balls');
+            const status = document.getElementById('statusMsg');
             const game = document.getElementById('game').value;
             field.innerHTML = '<div class="w-12 h-12 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>';
+            status.innerText = "Đang kết nối vietlott.vn...";
 
             setTimeout(() => {
                 field.innerHTML = '';
@@ -186,6 +204,7 @@
                     'POWER': { max: 55, count: 6 },
                     'LOTTO': { max: 35, count: 5 },
                     'MAX3D': { max: 9, count: 3, repeat: true },
+                    'MAX3DPRO': { max: 9, count: 6, repeat: true }, // Bộ 2 số (3-3)
                     'KENO': { max: 80, count: 20 },
                     'BINGO18': { max: 6, count: 3, repeat: true }
                 }[game];
@@ -195,7 +214,7 @@
                 const rng = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
 
                 while(nums.length < config.count) {
-                    let n = Math.floor(rng() * config.max) + (game.includes('MAX') ? 0 : 1);
+                    let n = Math.floor(rng() * (config.max + (game.includes('MAX') ? 1 : 0))) + (game.includes('MAX') ? 0 : 1);
                     if(config.repeat) nums.push(n);
                     else if(!nums.includes(n)) nums.push(n);
                 }
@@ -206,13 +225,27 @@
                     setTimeout(() => {
                         const b = document.createElement('div');
                         const isKeno = game === 'KENO';
-                        b.className = `ball ${isKeno ? 'w-8 h-8 text-xs' : 'w-12 h-12 text-lg'}`;
-                        b.innerText = n < 10 && !game.includes('MAX') ? '0'+n : n;
+                        b.className = `ball ${isKeno ? 'w-8 h-8 text-[10px]' : 'w-12 h-12 text-lg'}`;
+                        
+                        // Định dạng hiển thị Max 3D/Bingo
+                        if(game.includes('MAX') || game === 'BINGO18') b.innerText = n;
+                        else b.innerText = n < 10 ? '0'+n : n;
+                        
+                        // Phân cách bộ số Max 3D Pro
+                        if(game === 'MAX3DPRO' && i === 3) {
+                            const sep = document.createElement('div');
+                            sep.className = "w-full h-1 opacity-0"; // Xuống dòng cho bộ 2
+                            field.appendChild(sep);
+                        }
+
                         field.appendChild(b);
-                        if(i === nums.length - 1) document.getElementById('success').play().catch(()=>{});
-                    }, i * 100);
+                        if(i === nums.length - 1) {
+                            status.innerText = "PHÂN TÍCH DỮ LIỆU HOÀN TẤT";
+                            document.getElementById('success').play().catch(()=>{});
+                        }
+                    }, i * 120);
                 });
-            }, 1000);
+            }, 1200);
         }
     </script>
 </body>
