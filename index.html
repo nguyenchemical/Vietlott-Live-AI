@@ -30,28 +30,28 @@
             height: 100%; margin: 0; padding: 0;
             background-color: #000; overflow: hidden;
             font-family: 'Lexend', sans-serif;
-            transition: background-color 0.3s ease;
         }
 
+        /* Splash Screen Siêu Tốc (0.8s) */
         #splash {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
         }
         .splash-logo {
-            width: 220px; height: 220px; border-radius: 45px;
-            animation: pulse-gold 1.5s infinite ease-in-out;
+            width: 200px; height: 200px; border-radius: 40px;
+            animation: pulse-gold 1.2s infinite ease-in-out;
         }
         @keyframes pulse-gold {
             0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #FFD700); }
-            50% { transform: scale(1.05); filter: drop-shadow(0 0 30px #FFD700); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 25px #FFD700); }
         }
 
         .app-container {
             height: 100%; display: flex; flex-direction: column;
             padding: var(--safe-top) 1.2rem var(--safe-bottom) 1.2rem;
             max-width: 500px; margin: 0 auto; width: 100%; opacity: 0;
-            transition: opacity 0.6s ease-in;
+            transition: opacity 0.4s ease-in;
         }
         .app-visible { opacity: 1 !important; }
 
@@ -61,31 +61,33 @@
         .dark select { color: white !important; background-color: #1a1a1a !important; border: 2px solid #333; }
         .light select { color: black !important; background-color: white !important; border: 2px solid #cbd5e1; }
 
+        /* KHUNG KẾT QUẢ VÀ LOGO LÀM RÕ */
         .result-box {
             flex: 1; margin: 0.8rem 0; border-radius: 2.5rem;
             position: relative; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; overflow: hidden;
-            border: 2px solid rgba(255, 215, 0, 0.4);
+            border: 2px solid rgba(255, 215, 0, 0.5);
             padding: 20px; transition: all 0.3s ease;
         }
-        .dark .result-box { background: rgba(255, 255, 255, 0.03); }
+        .dark .result-box { background: rgba(30, 30, 30, 0.4); }
         .light .result-box { background: white; border-color: #e2e8f0; box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
 
+        /* Sửa lỗi Logo bị mờ/tối */
         .bg-icon { 
-            position: absolute; width: 75%; height: 75%;
+            position: absolute; width: 80%; height: 80%;
             top: 50%; left: 50%; transform: translate(-50%, -50%);
             object-fit: contain; pointer-events: none; z-index: 0;
+            filter: saturate(1.2);
         }
-        .dark .bg-icon { opacity: 0.12; }
-        .light .bg-icon { opacity: 0.25; filter: contrast(1.1); }
+        .dark .bg-icon { opacity: 0.35; filter: contrast(1.1) brightness(0.9); }
+        .light .bg-icon { opacity: 0.45; filter: contrast(1.2); }
 
-        .dark #statusMsg { color: rgba(255, 255, 255, 0.9); }
-        .light #statusMsg { color: rgba(15, 23, 42, 0.9); }
+        /* Ép màu chữ trạng thái cực rõ */
+        #statusMsg { font-weight: 900; text-shadow: 0px 2px 4px rgba(0,0,0,0.3); }
+        .dark #statusMsg { color: #FFFFFF; }
+        .light #statusMsg { color: #1e293b; }
 
-        /* Pháo hoa Canvas */
-        #fireworks {
-            position: absolute; inset: 0; pointer-events: none; z-index: 5;
-        }
+        #fireworks { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
 
         .btn-main { background: #FFD700; color: #000; font-weight: 900; box-shadow: 4px 4px 0px #000; }
         .btn-main:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000; }
@@ -94,7 +96,7 @@
         .btn-jackpot { background: #d32f2f; color: white; font-weight: 900; border-bottom: 4px solid #8b1e1e; }
 
         .ball {
-            animation: ball-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: ball-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             width: 3.2rem; height: 3.2rem; background: #FFD700; color: #000;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-weight: 900; border: 2px solid #000; z-index: 10;
@@ -108,7 +110,7 @@
 
     <div id="splash">
         <img src="icon.png" class="splash-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2313/2313982.png'">
-        <h2 class="text-gold mt-8 font-black text-2xl tracking-tighter italic">VIETLOTT LIVE AI</h2>
+        <h2 class="text-gold mt-6 font-black text-xl tracking-tighter italic uppercase">Vietlott AI Ultimate</h2>
     </div>
 
     <div id="appBody" class="app-container">
@@ -117,7 +119,7 @@
                 <div class="bg-vRed px-2 py-1 rounded text-white font-black italic text-[10px] animate-pulse">LIVE CONNECT</div>
                 <h1 class="font-900 text-xl tracking-tighter uppercase">Vietlott AI</h1>
             </div>
-            <button onclick="toggleTheme()" class="w-12 h-12 rounded-2xl bg-gold flex items-center justify-center shadow-lg">
+            <button onclick="toggleTheme()" class="w-12 h-12 rounded-2xl bg-gold flex items-center justify-center shadow-lg active:scale-95">
                 <i id="themeIcon" class="fas fa-moon text-black"></i>
             </button>
         </header>
@@ -136,9 +138,9 @@
             <canvas id="fireworks"></canvas>
             <img src="icon.png" class="bg-icon" onerror="this.style.display='none'">
             <div id="balls" class="flex flex-wrap justify-center gap-2 p-4 relative z-10">
-                <i id="netIcon" class="fas fa-wifi text-gold opacity-20 text-5xl animate-pulse"></i>
+                <i id="netIcon" class="fas fa-satellite-dish text-gold opacity-40 text-5xl animate-pulse"></i>
             </div>
-            <p id="statusMsg" class="mt-2 text-[11px] font-black uppercase tracking-[0.2em] z-10 italic">Hệ thống sẵn sàng</p>
+            <p id="statusMsg" class="mt-2 text-[11px] uppercase tracking-[0.2em] z-10 italic">Đang kiểm tra kết nối...</p>
         </div>
 
         <div class="grid grid-cols-3 gap-2">
@@ -160,11 +162,10 @@
     <audio id="click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
 
     <script>
-        // Hệ thống Pháo hoa
+        // Xử lý Pháo hoa
         const canvas = document.getElementById('fireworks');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
         function resizeCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
@@ -178,67 +179,70 @@
                 this.velocity = { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 };
                 this.alpha = 1; this.friction = 0.95;
             }
-            draw() {
-                ctx.globalAlpha = this.alpha;
-                ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = this.color; ctx.fill();
-            }
-            update() {
-                this.velocity.x *= this.friction; this.velocity.y *= this.friction;
-                this.x += this.velocity.x; this.y += this.velocity.y;
-                this.alpha -= 0.02;
-            }
+            draw() { ctx.globalAlpha = this.alpha; ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); }
+            update() { this.velocity.x *= this.friction; this.velocity.y *= this.friction; this.x += this.velocity.x; this.y += this.velocity.y; this.alpha -= 0.02; }
         }
 
         function createFireworks() {
             const colors = ['#FFD700', '#FF0000', '#FFFFFF', '#007bff'];
-            for (let i = 0; i < 40; i++) {
-                particles.push(new Particle(canvas.width/2, canvas.height/2, colors[Math.floor(Math.random() * colors.length)]));
-            }
+            for (let i = 0; i < 40; i++) particles.push(new Particle(canvas.width/2, canvas.height/2, colors[Math.floor(Math.random() * colors.length)]));
         }
 
         function animateFireworks() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, i) => {
-                if (p.alpha <= 0) particles.splice(i, 1);
-                else { p.update(); p.draw(); }
-            });
+            particles.forEach((p, i) => { if (p.alpha <= 0) particles.splice(i, 1); else { p.update(); p.draw(); } });
             if (particles.length > 0) requestAnimationFrame(animateFireworks);
         }
 
-        // Network & App Logic
+        // Logic Mạng Thông Minh (Sửa lỗi 4G/5G/LTE)
         function updateNetworkIcon() {
             const icon = document.getElementById('netIcon');
-            if (navigator.connection) {
-                const type = navigator.connection.effectiveType;
-                icon.className = (type === '4g' || type === '3g') ? 
-                    "fas fa-signal text-gold opacity-20 text-5xl animate-pulse" : 
-                    "fas fa-wifi text-gold opacity-20 text-5xl animate-pulse";
+            const statusText = document.getElementById('statusMsg');
+            
+            // Sử dụng API Network Information (chỉ hoạt động trên Chrome/Android/iOS qua Webkit)
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            
+            if (connection) {
+                const type = connection.type || connection.effectiveType;
+                // Phân loại mạng
+                if (type.includes('wifi')) {
+                    icon.className = "fas fa-wifi text-gold opacity-40 text-5xl animate-pulse";
+                    statusText.innerText = "Hệ thống Wifi sẵn sàng";
+                } else if (type.includes('cellular') || type.includes('4g') || type.includes('5g') || type.includes('lte') || type.includes('3g')) {
+                    icon.className = "fas fa-signal text-gold opacity-40 text-5xl animate-pulse";
+                    statusText.innerText = "Dữ liệu di động sẵn sàng";
+                } else {
+                    icon.className = "fas fa-satellite-dish text-gold opacity-40 text-5xl animate-pulse";
+                    statusText.innerText = "Hệ thống Cloud sẵn sàng";
+                }
+            } else {
+                // Dự phòng nếu trình duyệt không hỗ trợ API Network
+                icon.className = "fas fa-satellite-dish text-gold opacity-40 text-5xl animate-pulse";
+                statusText.innerText = "Hệ thống sẵn sàng";
             }
         }
 
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === 'visible') {
-                document.getElementById('balls').innerHTML = '<i id="netIcon" class="fas fa-wifi text-gold opacity-20 text-5xl animate-pulse"></i>';
-                document.getElementById('statusMsg').innerText = "Hệ thống sẵn sàng";
+                document.getElementById('balls').innerHTML = '<i id="netIcon" class="fas fa-satellite-dish text-gold opacity-40 text-5xl animate-pulse"></i>';
                 updateNetworkIcon();
             }
         });
 
+        // Splash screen 0.8s
         window.onload = () => {
             updateNetworkIcon();
             setTimeout(() => {
                 const splash = document.getElementById('splash');
                 splash.style.opacity = '0';
                 document.getElementById('appBody').classList.add('app-visible');
-                setTimeout(() => { splash.style.display = 'none'; }, 500);
-            }, 1500); 
+                setTimeout(() => { splash.style.display = 'none'; }, 300);
+            }, 800); 
         };
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function haptic() {
-            const osc = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
+            const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();
             osc.connect(g); g.connect(audioCtx.destination);
             osc.frequency.value = 60; g.gain.setValueAtTime(0.5, audioCtx.currentTime);
             g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
@@ -270,23 +274,17 @@
             setTimeout(() => {
                 field.innerHTML = '';
                 let config = {
-                    'MEGA': { max: 45, count: 6 },
-                    'POWER': { max: 55, count: 6 },
-                    'LOTTO': { max: 35, count: 5 },
-                    'MAX3D': { max: 9, count: 3, repeat: true },
-                    'MAX3DPRO': { max: 9, count: 6, repeat: true },
-                    'KENO': { max: 80, count: 20 },
-                    'BINGO18': { max: 6, count: 3, repeat: true }
+                    'MEGA': { max: 45, count: 6 }, 'POWER': { max: 55, count: 6 }, 'LOTTO': { max: 35, count: 5 },
+                    'MAX3D': { max: 9, count: 3, repeat: true }, 'MAX3DPRO': { max: 9, count: 6, repeat: true },
+                    'KENO': { max: 80, count: 20 }, 'BINGO18': { max: 6, count: 3, repeat: true }
                 }[game];
 
-                let nums = [];
-                let seed = mode === 'dob' ? parseInt(dd.value + mm.value) : Date.now();
+                let nums = []; let seed = mode === 'dob' ? parseInt(dd.value + mm.value) : Date.now();
                 const rng = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
 
                 while(nums.length < config.count) {
                     let n = Math.floor(rng() * (config.max + (game.includes('MAX') ? 1 : 0))) + (game.includes('MAX') ? 0 : 1);
-                    if(config.repeat) nums.push(n);
-                    else if(!nums.includes(n)) nums.push(n);
+                    if(config.repeat) nums.push(n); else if(!nums.includes(n)) nums.push(n);
                 }
                 if(!config.repeat) nums.sort((a,b)=>a-b);
 
@@ -301,12 +299,11 @@
                         if(i === nums.length - 1) {
                             status.innerText = "Kết quả phân tích may mắn";
                             document.getElementById('success').play().catch(()=>{});
-                            createFireworks(); // Bắn pháo hoa
-                            animateFireworks();
+                            createFireworks(); animateFireworks();
                         }
-                    }, i * 120);
+                    }, i * 100);
                 });
-            }, 1000);
+            }, 800);
         }
     </script>
 </body>
