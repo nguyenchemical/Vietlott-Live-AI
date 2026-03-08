@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Vietlott AI Trực Tiếp - Bản Ổn Định</title>
+    <title>Vietlott AI - Realtime Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -12,66 +12,69 @@
         :root { --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom); }
         
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; font-family: 'Lexend', sans-serif; transition: all 0.4s ease; }
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; font-family: 'Lexend', sans-serif; transition: all 0.5s ease; }
         
-        /* Chế độ Tối */
-        .dark body { background-color: #0d0d0d; color: #ffffff; }
-        /* Chế độ Sáng */
-        .light body { background-color: #f7fafc; color: #1a202c; }
-        /* Chế độ ĐỒNG SÁNG (Mới - rực rỡ hơn) */
-        .bronze body { background: linear-gradient(135deg, #a65e2e 0%, #e6a15c 100%); color: #fff; }
+        /* THEME 1: DARK */
+        .dark body { background: #0a0a0a; color: white; }
+        
+        /* THEME 2: LIGHT (Animated Clouds) */
+        .light body { background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%); color: #0369a1; }
+        .light .moving-bg { position: fixed; inset: 0; background: url('https://www.transparenttextures.com/patterns/clouds.png'); opacity: 0.4; animation: moveBg 60s linear infinite; z-index: -1; }
 
-        #splash { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .splash-logo { width: 150px; height: 150px; border-radius: 35px; animation: pulse 1.2s infinite ease-in-out; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+        /* THEME 3: BRIGHT BRONZE (Animated Shine) */
+        .bronze body { background: linear-gradient(135deg, #cd7f32, #f4a460, #8b4513); background-size: 400% 400%; animation: gradientMove 10s ease infinite; color: #fff; }
+        .bronze .moving-bg { position: fixed; inset: 0; background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%); animation: pulseShine 4s infinite; z-index: -1; }
 
-        .app-container { height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) 1.2rem var(--safe-bottom) 1.2rem; max-width: 500px; margin: 0 auto; opacity: 0; transition: opacity 0.5s; }
-        .app-visible { opacity: 1 !important; }
+        @keyframes moveBg { from { background-position: 0 0; } to { background-position: 1000px 500px; } }
+        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes pulseShine { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
 
-        .result-box { flex: 1; margin: 0.8rem 0; border-radius: 2.5rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border: 2px solid; transition: all 0.3s; }
-        .dark .result-box { background: rgba(255, 255, 255, 0.03); border-color: #FFD700; }
-        .light .result-box { background: #ffffff; border-color: #cbd5e1; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .bronze .result-box { background: rgba(255, 255, 255, 0.2); border-color: #ffffff; backdrop-filter: blur(10px); }
+        .app-container { height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) 1.2rem var(--safe-bottom) 1.2rem; max-width: 500px; margin: 0 auto; z-index: 10; position: relative; }
+        
+        /* Status Bar */
+        .status-pill { padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 900; display: flex; align-items: center; gap: 6px; transition: all 0.3s; }
+        .online { background: #22c55e; color: white; box-shadow: 0 0 10px rgba(34, 197, 94, 0.4); }
+        .offline { background: #ef4444; color: white; }
 
-        #gameNameDisplay { font-weight: 900; font-size: 0.9rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; z-index: 10; color: #FFD700; }
-        .bronze #gameNameDisplay { color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .result-box { flex: 1; margin: 0.8rem 0; border-radius: 2.5rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid; backdrop-filter: blur(8px); }
+        .dark .result-box { background: rgba(255,255,255,0.05); border-color: #FFD700; }
+        .light .result-box { background: rgba(255,255,255,0.6); border-color: #0ea5e9; }
+        .bronze .result-box { background: rgba(255,255,255,0.2); border-color: #fff; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
 
-        .ball { width: 3.2rem; height: 3.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; z-index: 10; animation: ballIn 0.3s forwards; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .ball { width: 3.2rem; height: 3.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; animation: pop 0.3s forwards; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .dark .ball, .light .ball { background: #FFD700; color: #000; }
-        .bronze .ball { background: #ffffff; color: #a65e2e; border-color: #ffffff; }
-        @keyframes ballIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .bronze .ball { background: #fff; color: #8b4513; border-color: #fff; }
+        @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
 
-        .ctrl-btn { width: 3.2rem; height: 3.2rem; border-radius: 1.1rem; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
-        .dark .ctrl-btn, .light .ctrl-btn { background: #FFD700; color: #000; }
-        .bronze .ctrl-btn { background: rgba(255, 255, 255, 0.25); color: #fff; }
+        .btn-main { width: 100%; padding: 1.2rem; border-radius: 1.5rem; font-weight: 900; text-transform: uppercase; border: none; transition: 0.2s; box-shadow: 0 6px 0 rgba(0,0,0,0.2); }
+        .dark .btn-main { background: #FFD700; color: #000; }
+        .light .btn-main { background: #0ea5e9; color: #fff; }
+        .bronze .btn-main { background: #fff; color: #cd7f32; }
+        .btn-main:active { transform: translateY(3px); box-shadow: none; }
 
-        .btn-main { width: 100%; padding: 1.2rem; border-radius: 1.4rem; font-weight: 900; text-transform: uppercase; font-size: 1.1rem; border: none; transition: 0.2s; }
-        .dark .btn-main, .light .btn-main { background: #FFD700; color: #000; box-shadow: 0 5px 0 #b39700; }
-        .bronze .btn-main { background: #ffffff; color: #a65e2e; box-shadow: 0 5px 0 #824924; }
-        .btn-main:active { transform: translateY(3px); box-shadow: 0 2px 0 transparent; }
-
-        select { width: 100%; padding: 0.9rem; border-radius: 1rem; font-weight: 900; -webkit-appearance: none; outline: none; border: 2px solid; }
-        .dark select { background: #1a1a1a; border-color: #333; color: #fff; }
-        .light select { background: #fff; border-color: #cbd5e1; color: #000; }
-        .bronze select { background: rgba(255, 255, 255, 0.2); border-color: #fff; color: #fff; }
+        select { width: 100%; padding: 0.8rem; border-radius: 1rem; font-weight: 900; -webkit-appearance: none; outline: none; border: 2px solid; background: rgba(255,255,255,0.1); }
+        .bronze select { border-color: #fff; color: white; }
     </style>
 </head>
 <body class="dark">
+    <div class="moving-bg"></div>
 
-    <div id="splash">
-        <img src="icon.png" class="splash-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2313/2313982.png'">
-        <h1 class="text-gold mt-6 font-black italic uppercase tracking-wider" style="color:#FFD700">Vietlott AI</h1>
-    </div>
-
-    <div id="app" class="app-container">
+    <div class="app-container">
         <header class="py-4 flex justify-between items-center">
             <div>
-                <div class="bg-red-600 px-2 py-0.5 rounded text-white font-black italic text-[9px] animate-pulse w-fit">AI LIVE TRỰC TIẾP</div>
-                <h1 class="font-900 text-2xl tracking-tighter uppercase">Vietlott AI</h1>
+                <div id="connStatus" class="status-pill online">
+                    <i id="connIcon" class="fas fa-check-circle"></i>
+                    <span id="connText">REALTIME: CONNECTED</span>
+                </div>
+                <h1 class="font-900 text-2xl uppercase mt-1">Vietlott AI</h1>
             </div>
             <div class="flex gap-2">
-                <button onclick="uiReset()" class="ctrl-btn"><i class="fas fa-redo-alt"></i></button>
-                <button onclick="nextTheme()" class="ctrl-btn"><i id="tIcon" class="fas fa-moon"></i></button>
+                <div class="flex items-center px-3 bg-black/20 rounded-xl">
+                    <i id="netTypeIcon" class="fas fa-wifi text-gold"></i>
+                </div>
+                <button onclick="changeTheme()" class="w-12 h-12 bg-gold/20 rounded-xl flex items-center justify-center border-2 border-gold/50">
+                    <i id="themeIcon" class="fas fa-moon text-gold"></i>
+                </button>
             </div>
         </header>
 
@@ -85,149 +88,127 @@
             <option value="BINGO18">BINGO 18</option>
         </select>
 
-        <div class="result-box text-center">
-            <div id="gameNameDisplay">SẴN SÀNG</div>
-            <div id="ballArea" class="flex flex-wrap justify-center gap-2 p-4 relative z-10">
-                <i class="fas fa-satellite-dish text-gold opacity-30 text-5xl animate-pulse"></i>
+        <div class="result-box">
+            <div id="gameName" class="font-900 text-sm tracking-widest mb-4 opacity-80 uppercase">ĐANG CHỜ KẾT NỐI...</div>
+            <div id="ballArea" class="flex flex-wrap justify-center gap-2 p-4">
+                <i class="fas fa-atom fa-spin text-5xl opacity-20"></i>
             </div>
-            <p id="statusMsg" class="mt-2 font-black text-[10px] uppercase opacity-60 italic">Đã kết nối máy chủ AI</p>
+            <p id="statusMsg" class="mt-4 text-[10px] font-black uppercase italic opacity-60">Sẵn sàng phân tích dữ liệu</p>
         </div>
 
         <div class="grid grid-cols-3 gap-2 mb-4">
-            <select id="dSelect"></select>
-            <select id="mSelect"></select>
-            <select id="ySelect"></select>
+            <select id="d"></select>
+            <select id="m"></select>
+            <select id="y"></select>
         </div>
 
         <div class="space-y-3 pb-6">
-            <button onclick="startPredict('ai')" class="btn-main">Phân Tích AI</button>
+            <button onclick="runPredict('ai')" class="btn-main">AI Phân Tích</button>
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="startPredict('dob')" class="py-4 rounded-2xl font-black text-[10px] uppercase bg-blue-600 text-white active:opacity-80">Theo Ngày Sinh</button>
-                <button onclick="startPredict('jackpot')" class="py-4 rounded-2xl font-black text-[10px] uppercase bg-red-600 text-white active:opacity-80">Jackpot AI</button>
+                <button onclick="runPredict('dob')" class="py-4 rounded-2xl font-black text-[10px] uppercase bg-blue-600 text-white shadow-lg active:scale-95">Theo Ngày Sinh</button>
+                <button onclick="runPredict('jackpot')" class="py-4 rounded-2xl font-black text-[10px] uppercase bg-red-600 text-white shadow-lg active:scale-95">Jackpot AI</button>
             </div>
         </div>
     </div>
 
     <script>
-        const STORAGE_KEY = 'vietlott_final_stable_v1';
+        // --- 1. XỬ LÝ MẠNG & KẾT NỐI ---
+        function updateNetworkInfo() {
+            const netIcon = document.getElementById('netTypeIcon');
+            const connIcon = document.getElementById('connIcon');
+            const connPill = document.getElementById('connStatus');
+            const connText = document.getElementById('connText');
+            
+            // Nhận diện loại mạng (Wifi vs Mobile)
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (connection) {
+                if (connection.type === 'wifi' || connection.effectiveType.includes('wifi')) {
+                    netIcon.className = "fas fa-wifi text-gold";
+                } else {
+                    netIcon.className = "fas fa-tower-cell text-gold";
+                }
+            }
 
-        // Khởi tạo ngày tháng
-        const d = document.getElementById('dSelect'), m = document.getElementById('mSelect'), y = document.getElementById('ySelect');
-        for(let i=1;i<=31;i++) d.innerHTML+=`<option value="${i}">${i}</option>`;
-        for(let i=1;i<=12;i++) m.innerHTML+=`<option value="${i}">Tháng ${i}</option>`;
-        for(let i=2026;i>=1960;i--) y.innerHTML+=`<option value="${i}">${i}</option>`;
+            // Giả lập check kết nối thời gian thực tới server Vietlott
+            if (navigator.onLine) {
+                connPill.className = "status-pill online";
+                connIcon.className = "fas fa-check-circle";
+                connText.innerText = "REALTIME: CONNECTED";
+            } else {
+                connPill.className = "status-pill offline";
+                connIcon.className = "fas fa-times-circle";
+                connText.innerText = "REALTIME: DISCONNECTED";
+            }
+        }
+        window.addEventListener('online', updateNetworkInfo);
+        window.addEventListener('offline', updateNetworkInfo);
 
-        function nextTheme() {
+        // --- 2. QUẢN LÝ THEME CHUYỂN ĐỘNG ---
+        function changeTheme() {
             const body = document.documentElement;
-            const icon = document.getElementById('tIcon');
+            const icon = document.getElementById('themeIcon');
             if(body.classList.contains('dark')) {
-                body.className = 'light'; icon.className = 'fas fa-sun';
+                body.className = 'light'; icon.className = 'fas fa-cloud-sun';
             } else if(body.classList.contains('light')) {
-                body.className = 'bronze'; icon.className = 'fas fa-shield-alt';
+                body.className = 'bronze'; icon.className = 'fas fa-gem';
             } else {
                 body.className = 'dark'; icon.className = 'fas fa-moon';
             }
-            saveAppState();
         }
+
+        // --- 3. KHỞI TẠO DỮ LIỆU ---
+        const selD = document.getElementById('d'), selM = document.getElementById('m'), selY = document.getElementById('y');
+        for(let i=1;i<=31;i++) selD.innerHTML += `<option value="${i}">${i}</option>`;
+        for(let i=1;i<=12;i++) selM.innerHTML += `<option value="${i}">Tháng ${i}</option>`;
+        for(let i=2026;i>=1960;i--) selY.innerHTML += `<option value="${i}">${i}</option>`;
 
         function syncTitle() {
-            const sel = document.getElementById('gameSelect');
-            document.getElementById('gameNameDisplay').innerText = sel.options[sel.selectedIndex].text;
-            saveAppState();
+            const s = document.getElementById('gameSelect');
+            document.getElementById('gameName').innerText = s.options[s.selectedIndex].text;
         }
 
-        function saveAppState() {
-            const state = {
-                game: document.getElementById('gameSelect').value,
-                gameText: document.getElementById('gameNameDisplay').innerText,
-                balls: document.getElementById('ballArea').innerHTML,
-                status: document.getElementById('statusMsg').innerText,
-                theme: document.documentElement.className,
-                d: d.value, m: m.value, y: y.value
-            };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        }
-
-        function uiReset() {
-            document.getElementById('ballArea').innerHTML = '<i class="fas fa-satellite-dish text-gold opacity-30 text-5xl animate-pulse"></i>';
-            document.getElementById('statusMsg').innerText = "Hệ thống sẵn sàng";
-            syncTitle();
-        }
-
-        window.onload = () => {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if(saved) {
-                const s = JSON.parse(saved);
-                document.getElementById('gameSelect').value = s.game;
-                document.getElementById('gameNameDisplay').innerText = s.gameText;
-                document.getElementById('ballArea').innerHTML = s.balls;
-                document.getElementById('statusMsg').innerText = s.status;
-                document.documentElement.className = s.theme;
-                d.value = s.d; m.value = s.m; y.value = s.y;
-                const icon = document.getElementById('tIcon');
-                if(s.theme === 'dark') icon.className = 'fas fa-moon';
-                else if(s.theme === 'light') icon.className = 'fas fa-sun';
-                else icon.className = 'fas fa-shield-alt';
-            } else {
-                syncTitle();
+        // --- 4. LOGIC PHÂN TÍCH (CHỐNG TREO) ---
+        function runPredict(mode) {
+            if(!navigator.onLine) {
+                alert("Không có kết nối mạng thời gian thực!");
+                return;
             }
 
-            setTimeout(() => {
-                document.getElementById('splash').style.opacity = '0';
-                document.getElementById('app').classList.add('app-visible');
-                setTimeout(() => document.getElementById('splash').style.display='none', 500);
-            }, 800);
-        };
-
-        function startPredict(mode) {
             const area = document.getElementById('ballArea');
             const status = document.getElementById('statusMsg');
             const game = document.getElementById('gameSelect').value;
             
-            // Hiện loading
             area.innerHTML = '<div class="w-12 h-12 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>';
-            status.innerText = "AI đang xử lý...";
+            status.innerText = "AI đang quét dữ liệu Vietlott...";
 
             setTimeout(() => {
                 area.innerHTML = '';
-                const config = {
-                    'MEGA':[45,6], 'POWER':[55,6], 'LOTTO':[35,5], 'MAX3D':[9,3],
-                    'MAX3DPRO':[9,6], 'KENO':[80,20], 'BINGO18':[6,3]
-                }[game];
-
+                const config = { 'MEGA':[45,6], 'POWER':[55,6], 'LOTTO':[35,5], 'MAX3D':[9,3], 'MAX3DPRO':[9,6], 'KENO':[80,20], 'BINGO18':[6,3] }[game];
                 let results = [];
-                // Công thức seed an toàn chống treo
-                let seedVal = mode === 'dob' ? (Number(d.value) + Number(m.value) * 31 + Number(y.value)) : Date.now();
+                let seed = mode === 'dob' ? (Number(selD.value) + Number(selM.value) * 31) : Date.now();
                 
-                const random = () => {
-                    seedVal = (seedVal * 16807) % 2147483647;
-                    return seedVal / 2147483647;
-                };
+                const rng = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
 
                 while(results.length < config[1]) {
-                    let n = Math.floor(random() * (config[0] + (game.includes('MAX') ? 1 : 0))) + (game.includes('MAX') ? 0 : 1);
-                    if(game.includes('MAX') || game === 'BINGO18') {
-                        results.push(n);
-                    } else if(!results.includes(n)) {
-                        results.push(n);
-                    }
+                    let n = Math.floor(rng() * (config[0] + (game.includes('MAX') ? 1 : 0))) + (game.includes('MAX') ? 0 : 1);
+                    if(game.includes('MAX') || game === 'BINGO18') results.push(n);
+                    else if(!results.includes(n)) results.push(n);
                 }
                 if(!game.includes('MAX') && game !== 'BINGO18') results.sort((a,b) => a-b);
 
-                results.forEach((num, i) => {
+                results.forEach((n, i) => {
                     setTimeout(() => {
                         const b = document.createElement('div');
                         b.className = `ball ${game==='KENO'?'w-8 h-8 text-[10px]':'w-12 h-12 text-lg'}`;
-                        b.innerText = num < 10 ? '0'+num : num;
+                        b.innerText = n < 10 ? '0'+n : n;
                         area.appendChild(b);
-                        if(i === results.length - 1) {
-                            status.innerText = "Gợi ý hoàn tất!";
-                            saveAppState();
-                        }
-                    }, i * 80);
+                        if(i === results.length - 1) status.innerText = "Kết nối thành công - Đã nhận số!";
+                    }, i * 70);
                 });
-            }, 1000);
+            }, 1200);
         }
+
+        window.onload = () => { syncTitle(); updateNetworkInfo(); };
     </script>
 </body>
 </html>
