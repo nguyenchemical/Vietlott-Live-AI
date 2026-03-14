@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Vietlott AI - Realtime Edition</title>
+    
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" sizes="192x192" href="icon.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -17,11 +23,11 @@
         /* THEME 1: DARK */
         .dark body { background: #0a0a0a; color: white; }
         
-        /* THEME 2: LIGHT (Animated Clouds) */
+        /* THEME 2: LIGHT */
         .light body { background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%); color: #0369a1; }
         .light .moving-bg { position: fixed; inset: 0; background: url('https://www.transparenttextures.com/patterns/clouds.png'); opacity: 0.4; animation: moveBg 60s linear infinite; z-index: -1; }
 
-        /* THEME 3: BRIGHT BRONZE (Animated Shine) */
+        /* THEME 3: BRONZE */
         .bronze body { background: linear-gradient(135deg, #cd7f32, #f4a460, #8b4513); background-size: 400% 400%; animation: gradientMove 10s ease infinite; color: #fff; }
         .bronze .moving-bg { position: fixed; inset: 0; background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%); animation: pulseShine 4s infinite; z-index: -1; }
 
@@ -31,17 +37,21 @@
 
         .app-container { height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) 1.2rem var(--safe-bottom) 1.2rem; max-width: 500px; margin: 0 auto; z-index: 10; position: relative; }
         
-        /* Status Bar */
         .status-pill { padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 900; display: flex; align-items: center; gap: 6px; transition: all 0.3s; }
         .online { background: #22c55e; color: white; box-shadow: 0 0 10px rgba(34, 197, 94, 0.4); }
         .offline { background: #ef4444; color: white; }
 
-        .result-box { flex: 1; margin: 0.8rem 0; border-radius: 2.5rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid; backdrop-filter: blur(8px); }
+        /* Result Box với Logo chìm */
+        .result-box { flex: 1; margin: 0.8rem 0; border-radius: 2.5rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid; backdrop-filter: blur(8px); overflow: hidden; }
         .dark .result-box { background: rgba(255,255,255,0.05); border-color: #FFD700; }
         .light .result-box { background: rgba(255,255,255,0.6); border-color: #0ea5e9; }
-        .bronze .result-box { background: rgba(255,255,255,0.2); border-color: #fff; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .bronze .result-box { background: rgba(255,255,255,0.2); border-color: #fff; }
 
-        .ball { width: 3.2rem; height: 3.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; animation: pop 0.3s forwards; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        /* Chỉnh logo Vietlott chìm chính giữa */
+        .bg-logo { position: absolute; width: 60%; opacity: 0.1; pointer-events: none; z-index: -1; filter: grayscale(1); }
+        .light .bg-logo { opacity: 0.08; filter: none; }
+
+        .ball { width: 3.2rem; height: 3.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; animation: pop 0.3s forwards; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 1; }
         .dark .ball, .light .ball { background: #FFD700; color: #000; }
         .bronze .ball { background: #fff; color: #8b4513; border-color: #fff; }
         @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
@@ -88,12 +98,14 @@
             <option value="BINGO18">BINGO 18</option>
         </select>
 
-        <div class="result-box">
-            <div id="gameName" class="font-900 text-sm tracking-widest mb-4 opacity-80 uppercase">ĐANG CHỜ KẾT NỐI...</div>
-            <div id="ballArea" class="flex flex-wrap justify-center gap-2 p-4">
+        <div class="result-box" id="resultBox">
+            <img src="https://i.ibb.co/VWVm09kL/unnamed.jpg" class="bg-logo" alt="Vietlott Logo">
+            
+            <div id="gameName" class="font-900 text-sm tracking-widest mb-4 opacity-80 uppercase z-10">ĐANG CHỜ KẾT NỐI...</div>
+            <div id="ballArea" class="flex flex-wrap justify-center gap-2 p-4 z-10">
                 <i class="fas fa-atom fa-spin text-5xl opacity-20"></i>
             </div>
-            <p id="statusMsg" class="mt-4 text-[10px] font-black uppercase italic opacity-60">Sẵn sàng phân tích dữ liệu</p>
+            <p id="statusMsg" class="mt-4 text-[10px] font-black uppercase italic opacity-60 z-10">Sẵn sàng phân tích dữ liệu</p>
         </div>
 
         <div class="grid grid-cols-3 gap-2 mb-4">
@@ -119,7 +131,6 @@
             const connPill = document.getElementById('connStatus');
             const connText = document.getElementById('connText');
             
-            // Nhận diện loại mạng (Wifi vs Mobile)
             const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
             if (connection) {
                 if (connection.type === 'wifi' || connection.effectiveType.includes('wifi')) {
@@ -129,7 +140,6 @@
                 }
             }
 
-            // Giả lập check kết nối thời gian thực tới server Vietlott
             if (navigator.onLine) {
                 connPill.className = "status-pill online";
                 connIcon.className = "fas fa-check-circle";
@@ -167,7 +177,7 @@
             document.getElementById('gameName').innerText = s.options[s.selectedIndex].text;
         }
 
-        // --- 4. LOGIC PHÂN TÍCH (CHỐNG TREO) ---
+        // --- 4. LOGIC PHÂN TÍCH (GIỮ 100% LOGIC AI) ---
         function runPredict(mode) {
             if(!navigator.onLine) {
                 alert("Không có kết nối mạng thời gian thực!");
