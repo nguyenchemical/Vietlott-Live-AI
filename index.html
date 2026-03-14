@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png">
     <link rel="apple-touch-icon" href="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -19,13 +20,13 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; font-family: 'Lexend', sans-serif; transition: all 0.5s ease; }
         
-        /* Splash Screen */
+        /* Splash Screen Động */
         #splash {
             position: fixed; inset: 0; background: #0a0a0a; z-index: 100;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.8s ease, visibility 0.8s;
         }
-        .splash-logo { width: 120px; animation: pulse 2s infinite ease-in-out; }
+        .splash-logo { width: 120px; height: 120px; object-fit: contain; animation: pulse 2s infinite ease-in-out; }
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
 
         /* Themes */
@@ -44,14 +45,14 @@
         .online { background: #22c55e; color: white; }
         .offline { background: #ef4444; color: white; }
 
-        /* Result Box */
+        /* Result Box với hình nền logo */
         .result-box { flex: 1; margin: 0.8rem 0; border-radius: 2.5rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid; backdrop-filter: blur(8px); overflow: hidden; }
         .dark .result-box { background: rgba(255,255,255,0.05); border-color: #FFD700; }
         .light .result-box { background: rgba(255,255,255,0.6); border-color: #0ea5e9; }
         .bronze .result-box { background: rgba(255,255,255,0.2); border-color: #fff; }
 
-        .bg-logo { position: absolute; width: 75%; opacity: 0.12; pointer-events: none; z-index: -1; filter: grayscale(1); }
-        .light .bg-logo { opacity: 0.1; filter: none; }
+        .bg-logo-inner { position: absolute; width: 70%; opacity: 0.15; pointer-events: none; z-index: 0; filter: grayscale(0.5); }
+        .light .bg-logo-inner { opacity: 0.1; filter: none; }
 
         .ball { width: 3.2rem; height: 3.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; animation: pop 0.3s forwards; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 1; }
         .dark .ball, .light .ball { background: #FFD700; color: #000; }
@@ -69,8 +70,8 @@
 </head>
 <body class="dark">
     <div id="splash">
-        <img src="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png" class="splash-logo">
-        <div class="mt-4 font-black text-gold tracking-widest text-sm">VIETLOTT AI LOADING...</div>
+        <img src="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png" class="splash-logo" onerror="this.src='icon.png'">
+        <div class="mt-4 font-black text-gold tracking-widest text-sm uppercase">Vietlott AI Loading...</div>
     </div>
 
     <div class="moving-bg"></div>
@@ -78,7 +79,7 @@
     <div class="app-container">
         <header class="py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png" class="w-10 h-10 rounded-lg">
+                <img src="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png" class="w-10 h-10 rounded-lg object-contain" onerror="this.src='icon.png'">
                 <div>
                     <div id="connStatus" class="status-pill online">
                         <i id="connIcon" class="fas fa-check-circle"></i>
@@ -108,7 +109,8 @@
         </select>
 
         <div class="result-box" id="resultBox">
-            <img src="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png" class="bg-logo">
+            <img src="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png" class="bg-logo-inner" onerror="this.src='icon.png'">
+            
             <div id="gameName" class="font-900 text-sm tracking-widest mb-4 opacity-80 uppercase z-10">ĐANG CHỜ KẾT NỐI...</div>
             <div id="ballArea" class="flex flex-wrap justify-center gap-2 p-4 z-10">
                 <i class="fas fa-atom fa-spin text-5xl opacity-20"></i>
@@ -130,7 +132,7 @@
     </div>
 
     <script>
-        // --- Splash Control ---
+        // Điều khiển Splash Screen
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash');
