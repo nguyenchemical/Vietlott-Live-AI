@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Vietlott AI - Realtime Edition</title>
     
-    <link rel="icon" type="image/png" href="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png">
-    <link rel="apple-touch-icon" href="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png">
-    <link rel="shortcut icon" href="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png">
+    <link rel="icon" type="image/png" href="icln.png">
+    <link rel="apple-touch-icon" href="icln.png">
+    <link rel="shortcut icon" href="icln.png">
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Vietlott AI">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Vietlott%20AI%22,%22short_name%22:%22VietlottAI%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22icons%22:[{%22src%22:%22512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
+    
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Vietlott%20AI%22,%22short_name%22:%22VietlottAI%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22icons%22:[{%22src%22:%22icln.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -25,7 +26,7 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; font-family: 'Lexend', sans-serif; transition: all 0.5s ease; }
         
-        /* Splash Screen */
+        /* Splash Screen Động */
         #splash {
             position: fixed; inset: 0; background: #0a0a0a; z-index: 100;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -56,6 +57,7 @@
         .light .result-box { background: rgba(255,255,255,0.6); border-color: #0ea5e9; }
         .bronze .result-box { background: rgba(255,255,255,0.2); border-color: #fff; }
 
+        /* Hình nền logo chìm dùng icln.png */
         .bg-logo-inner { position: absolute; width: 80%; opacity: 0.15; pointer-events: none; z-index: 0; }
 
         .ball { width: 3.2rem; height: 3.2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; animation: pop 0.3s forwards; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 1; }
@@ -74,7 +76,7 @@
 </head>
 <body class="dark">
     <div id="splash">
-        <img src="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png" class="splash-logo">
+        <img src="icln.png" class="splash-logo">
         <div class="mt-6 font-black text-gold tracking-widest text-sm uppercase">Vietlott AI Loading...</div>
     </div>
 
@@ -83,7 +85,7 @@
     <div class="app-container">
         <header class="py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png" class="w-10 h-10 rounded-lg shadow-lg">
+                <img src="icln.png" class="w-10 h-10 rounded-lg shadow-lg object-contain">
                 <div>
                     <div id="connStatus" class="status-pill online">
                         <i id="connIcon" class="fas fa-check-circle"></i>
@@ -113,7 +115,7 @@
         </select>
 
         <div class="result-box" id="resultBox">
-            <img src="512x512.4e180c153854dd3721553b2b21d12a05.ai.1.png" class="bg-logo-inner">
+            <img src="icln.png" class="bg-logo-inner">
             <div id="gameName" class="font-900 text-sm tracking-widest mb-4 opacity-80 uppercase z-10">ĐANG CHỜ KẾT NỐI...</div>
             <div id="ballArea" class="flex flex-wrap justify-center gap-2 p-4 z-10">
                 <i class="fas fa-atom fa-spin text-5xl opacity-20"></i>
@@ -135,7 +137,7 @@
     </div>
 
     <script>
-        // Splash Screen
+        // Splash Screen Control
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash');
@@ -144,7 +146,7 @@
             }, 2000);
         });
 
-        // Network
+        // Network Status
         function updateNetworkInfo() {
             const netIcon = document.getElementById('netTypeIcon');
             const connIcon = document.getElementById('connIcon'), connPill = document.getElementById('connStatus'), connText = document.getElementById('connText');
@@ -155,7 +157,7 @@
         }
         window.addEventListener('online', updateNetworkInfo); window.addEventListener('offline', updateNetworkInfo);
 
-        // Theme
+        // Theme Switcher
         function changeTheme() {
             const body = document.documentElement, icon = document.getElementById('themeIcon');
             if(body.className === 'dark') { body.className = 'light'; icon.className = 'fas fa-cloud-sun'; }
@@ -163,6 +165,7 @@
             else { body.className = 'dark'; icon.className = 'fas fa-moon'; }
         }
 
+        // Initialize Selects
         const selD = document.getElementById('d'), selM = document.getElementById('m'), selY = document.getElementById('y');
         for(let i=1;i<=31;i++) selD.innerHTML += `<option value="${i}">${i}</option>`;
         for(let i=1;i<=12;i++) selM.innerHTML += `<option value="${i}">Tháng ${i}</option>`;
@@ -170,7 +173,7 @@
 
         function syncTitle() { const s = document.getElementById('gameSelect'); document.getElementById('gameName').innerText = s.options[s.selectedIndex].text; }
 
-        // Logic AI
+        // Logic AI Phân Tích
         function runPredict(mode) {
             if(!navigator.onLine) { alert("Không có kết nối mạng!"); return; }
             const area = document.getElementById('ballArea'), status = document.getElementById('statusMsg'), game = document.getElementById('gameSelect').value;
