@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Vietlott AI - Ultimate Edition</title>
+    <title>Vietlott AI - Phiên Bản Đặc Biệt</title>
     
     <link rel="icon" type="image/png" href="icln.png">
     <link rel="apple-touch-icon" href="icln.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Vietlott AI">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Vietlott%20AI%22,%22short_name%22:%22VietlottAI%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22icons%22:[{%22src%22:%22icln.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
 
@@ -22,7 +23,7 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; font-family: 'Lexend', sans-serif; transition: all 0.5s ease; }
         
-        /* Splash Screen */
+        /* Màn hình chào (Splash Screen) */
         #splash { position: fixed; inset: 0; background: #0a0a0a; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease, visibility 0.8s; }
         .splash-logo { width: 140px; height: 140px; object-fit: contain; animation: pulse 2s infinite ease-in-out; }
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.15); opacity: 1; } }
@@ -34,23 +35,25 @@
 
         .app-container { height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) 1.2rem var(--safe-bottom) 1.2rem; max-width: 500px; margin: 0 auto; z-index: 10; position: relative; }
         
-        /* Result Box */
+        /* Khu vực hiển thị kết quả */
         .result-box { flex: 1; margin: 0.5rem 0; border-radius: 2rem; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid; backdrop-filter: blur(8px); overflow: hidden; }
         .dark .result-box { background: rgba(255,255,255,0.05); border-color: #FFD700; }
         .light .result-box { background: rgba(255,255,255,0.6); border-color: #0ea5e9; }
         .bronze .result-box { background: rgba(255,255,255,0.2); border-color: #fff; }
         .bg-logo-inner { position: absolute; width: 80%; opacity: 0.15; pointer-events: none; z-index: 0; }
 
-        /* Jackpot Meter */
+        /* Thước đo Jackpot */
         .meter-container { width: 100%; padding: 10px 20px; background: rgba(0,0,0,0.2); border-radius: 1rem; margin-bottom: 10px; }
         .meter-bar { width: 100%; height: 8px; background: #333; border-radius: 4px; overflow: hidden; position: relative; }
         .meter-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #22c55e, #eab308, #ef4444); transition: width 1.5s ease-out; }
 
+        /* Quả bóng số */
         .ball { width: 3rem; height: 3rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #000; animation: pop 0.3s forwards; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 1; }
         .dark .ball, .light .ball { background: #FFD700; color: #000; }
         .bronze .ball { background: #fff; color: #8b4513; border-color: #fff; }
         @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
 
+        /* Nút bấm chính */
         .btn-main { width: 100%; padding: 1rem; border-radius: 1.2rem; font-weight: 900; text-transform: uppercase; border: none; transition: 0.2s; box-shadow: 0 5px 0 rgba(0,0,0,0.2); }
         .dark .btn-main { background: #FFD700; color: #000; }
         .light .btn-main { background: #0ea5e9; color: #fff; }
@@ -60,13 +63,13 @@
         #realtime-clock { font-family: monospace; font-weight: 700; font-size: 12px; color: #FFD700; }
     </style>
 </head>
-<body class="dark">
-    <audio id="sound-click" src="https://www.soundjay.com/buttons/button-16.mp3" preload="auto"></audio>
-    <audio id="sound-result" src="https://www.soundjay.com/buttons/beep-01a.mp3" preload="auto"></audio>
+<body class="dark" onclick="unlockAudio()">
+    <audio id="sound-click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
+    <audio id="sound-result" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3" preload="auto"></audio>
 
     <div id="splash">
         <img src="icln.png" class="splash-logo">
-        <div class="mt-6 font-black text-gold tracking-widest text-sm">LEARNING FROM VIETLOTT.VN...</div>
+        <div class="mt-6 font-black text-gold tracking-widest text-sm uppercase">Đang kết nối dữ liệu Vietlott...</div>
     </div>
 
     <div class="app-container">
@@ -74,8 +77,8 @@
             <div class="flex items-center gap-3">
                 <img src="icln.png" class="w-10 h-10 rounded-lg shadow-lg">
                 <div>
-                    <div id="realtime-clock">DD/MM/YYYY --:--:--</div>
-                    <h1 class="font-900 text-lg uppercase">Vietlott AI Ultimate</h1>
+                    <div id="realtime-clock">00/00/0000 00:00:00</div>
+                    <h1 class="font-900 text-lg uppercase">Vietlott AI Pro</h1>
                 </div>
             </div>
             <button onclick="changeTheme()" class="w-10 h-10 bg-gold/20 rounded-xl flex items-center justify-center border-2 border-gold/50">
@@ -84,34 +87,34 @@
         </header>
 
         <select id="gameSelect" class="mb-2" onchange="syncTitle()">
-            <option value="MEGA">MEGA 6/45 (GOLDEN SUM)</option>
-            <option value="POWER">POWER 6/55 (GOLDEN SUM)</option>
-            <option value="MAX3D">MAX 3D (AI LOGIC)</option>
-            <option value="MAX3DPLUS">MAX 3D+ (AI PRO)</option>
-            <option value="MAX3DPRO">MAX 3D PRO (SPECIAL)</option>
-            <option value="LOTTO">LOTTO 5/35 (REALTIME AI)</option>
+            <option value="MEGA">MEGA 6/45 (VÙNG VÀNG)</option>
+            <option value="POWER">POWER 6/55 (VÙNG VÀNG)</option>
+            <option value="MAX3D">MAX 3D (LOGIC AI)</option>
+            <option value="MAX3DPLUS">MAX 3D+ (LOGIC PRO)</option>
+            <option value="MAX3DPRO">MAX 3D PRO (ĐẶC BIỆT)</option>
+            <option value="LOTTO">LOTTO 5/35 (REALTIME)</option>
             <option value="KENO">KENO (20 SỐ)</option>
             <option value="BINGO18">BINGO 18</option>
         </select>
 
         <div class="result-box" id="resultBox">
             <img src="icln.png" class="bg-logo-inner">
-            <div id="gameName" class="font-900 text-xs tracking-widest mb-2 opacity-80 uppercase z-10">READY</div>
+            <div id="gameName" class="font-900 text-xs tracking-widest mb-2 opacity-80 uppercase z-10">SẴN SÀNG</div>
             <div id="ballArea" class="flex flex-wrap justify-center gap-2 p-2 z-10">
                 <i class="fas fa-microchip fa-spin text-4xl opacity-20"></i>
             </div>
-            <p id="statusMsg" class="mt-2 text-[10px] font-black uppercase italic opacity-60 z-10 text-center">AI Trained on Vietlott.vn</p>
+            <p id="statusMsg" class="mt-2 text-[10px] font-black uppercase italic opacity-60 z-10 text-center">Đã đồng bộ với Vietlott.vn</p>
         </div>
 
         <div class="meter-container z-10">
             <div class="flex justify-between text-[10px] font-bold mb-1">
-                <span>JACKPOT HEAT</span>
+                <span>ĐỘ NÓNG JACKPOT (THỜI GIAN THỰC)</span>
                 <span id="meter-val">0%</span>
             </div>
             <div class="meter-bar">
                 <div id="meter-fill" class="meter-fill"></div>
             </div>
-            <div id="meter-status" class="text-[9px] mt-1 text-center opacity-70">AI Deep Learning Enabled...</div>
+            <div id="meter-status" class="text-[9px] mt-1 text-center opacity-70">Đang phân tích thị trường...</div>
         </div>
 
         <div class="grid grid-cols-3 gap-2 mb-3">
@@ -119,34 +122,40 @@
         </div>
 
         <div class="space-y-2 pb-4">
-            <button onclick="runPredict('ai')" class="btn-main">AI Phân Tích Logic</button>
+            <button onclick="runPredict('ai')" class="btn-main">AI Phân Tích Bộ Số</button>
             <div class="grid grid-cols-2 gap-2">
-                <button onclick="runPredict('dob')" class="py-3 rounded-xl font-black text-[9px] uppercase bg-blue-600 text-white shadow-lg active:scale-95">Mệnh Cung AI</button>
+                <button onclick="runPredict('dob')" class="py-3 rounded-xl font-black text-[9px] uppercase bg-blue-600 text-white shadow-lg active:scale-95">Theo Ngày Sinh</button>
                 <button onclick="runPredict('jackpot')" class="py-3 rounded-xl font-black text-[9px] uppercase bg-red-600 text-white shadow-lg active:scale-95">Săn Jackpot</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. Đồng hồ thời gian thực
+        let audioUnlocked = false;
+        function unlockAudio() {
+            if (!audioUnlocked) {
+                document.getElementById('sound-click').play().then(() => {
+                    document.getElementById('sound-click').pause();
+                    audioUnlocked = true;
+                });
+            }
+        }
+
+        // Đồng hồ hệ thống
         function updateClock() {
             const now = new Date();
             const pad = (n) => n.toString().padStart(2, '0');
-            const str = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-            document.getElementById('realtime-clock').innerText = str;
+            document.getElementById('realtime-clock').innerText = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
         }
         setInterval(updateClock, 1000);
 
-        // 2. Thuật toán AI logic
+        // Thuật toán AI logic
         function generateAdvancedNumbers(game) {
             let nums = [];
             const rng = () => Math.random();
-            
             if (game === 'MEGA' || game === 'POWER') {
-                const limit = game === 'MEGA' ? 45 : 55;
-                const targetSum = game === 'MEGA' ? 150 : 180;
-                const range = game === 'MEGA' ? 30 : 40;
-                
+                const limit = (game === 'MEGA') ? 45 : 55;
+                const targetSum = (game === 'MEGA') ? 150 : 180;
                 let attempts = 0;
                 while (attempts < 1000) {
                     let temp = [];
@@ -155,20 +164,15 @@
                         if(!temp.includes(r)) temp.push(r);
                     }
                     let sum = temp.reduce((a, b) => a + b, 0);
-                    let evens = temp.filter(n => n % 2 === 0).length;
-                    if (sum >= targetSum-range && sum <= targetSum+range && evens >= 2 && evens <= 4) {
+                    if (sum >= targetSum-30 && sum <= targetSum+30) {
                         nums = temp.sort((a,b) => a-b);
                         break;
                     }
                     attempts++;
                 }
             } else if (game.includes('MAX3D')) {
-                // Logic Max 3D/+/Pro
-                const count = game === 'MAX3D' ? 1 : (game === 'MAX3DPLUS' ? 2 : 20); // 20 bộ cho Pro nếu cần, nhưng thường hiện bộ tiêu biểu
-                const sets = (game === 'MAX3DPRO') ? 2 : (game === 'MAX3DPLUS' ? 2 : 1);
-                for(let i=0; i < sets; i++) {
-                    nums.push(Math.floor(rng() * 1000).toString().padStart(3, '0'));
-                }
+                const sets = (game === 'MAX3D') ? 1 : 2;
+                for(let i=0; i < sets; i++) nums.push(Math.floor(rng() * 1000).toString().padStart(3, '0'));
             } else if (game === 'LOTTO') {
                 while(nums.length < 5) {
                     let r = Math.floor(rng() * 35) + 1;
@@ -187,26 +191,27 @@
             return nums;
         }
 
-        // 3. Pháo hoa và âm thanh
-        function triggerSuccessEffect() {
-            document.getElementById('sound-result').play();
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#FFD700', '#FFFFFF', '#FF0000']
-            });
+        function updateMeter(game) {
+            const fill = document.getElementById('meter-fill'), val = document.getElementById('meter-val'), status = document.getElementById('meter-status');
+            let heat = 40 + Math.random() * 50;
+            if(game === 'POWER' || game === 'MEGA') heat = 70 + Math.random() * 25;
+            fill.style.width = heat + '%';
+            val.innerText = Math.floor(heat) + '%';
+            status.innerText = heat > 85 ? "CẢNH BÁO: XÁC SUẤT NỔ CỰC CAO!" : "TRẠNG THÁI: ĐANG TÍCH TỤ NHIỆT LƯỢNG";
         }
 
         function runPredict(mode) {
-            document.getElementById('sound-click').play();
+            const sClick = document.getElementById('sound-click'), sResult = document.getElementById('sound-result');
+            if(audioUnlocked) sClick.play();
+            
             const area = document.getElementById('ballArea'), status = document.getElementById('statusMsg'), game = document.getElementById('gameSelect').value;
             area.innerHTML = '<div class="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>';
-            status.innerText = "AI đang đối soát dữ liệu Vietlott...";
+            status.innerText = "AI đang quét tần suất từ Vietlott.vn...";
             
             setTimeout(() => {
                 area.innerHTML = '';
                 const results = generateAdvancedNumbers(game);
+                updateMeter(game);
                 results.forEach((n, i) => {
                     setTimeout(() => {
                         const b = document.createElement('div');
@@ -214,21 +219,23 @@
                         b.innerText = n;
                         area.appendChild(b);
                         if(i === results.length - 1) {
-                            status.innerText = "Đã tìm thấy bộ số có xác suất cao nhất!";
-                            triggerSuccessEffect();
+                            status.innerText = "Đã tìm thấy bộ số tiềm năng nhất!";
+                            if(audioUnlocked) sResult.play();
+                            confetti({ particleCount: 100, spread: 70, origin: { y: 0.7 }, colors: ['#FFD700', '#FF0000', '#FFFFFF'] });
                         }
                     }, i * 150);
                 });
             }, 1500);
         }
 
-        // Khởi tạo
         window.addEventListener('load', () => {
             setTimeout(() => {
-                document.getElementById('splash').style.opacity = '0';
-                setTimeout(() => document.getElementById('splash').style.visibility = 'hidden', 800);
+                const sp = document.getElementById('splash');
+                sp.style.opacity = '0';
+                setTimeout(() => sp.style.visibility = 'hidden', 800);
             }, 2000);
             syncTitle();
+            updateClock();
         });
 
         function changeTheme() {
@@ -244,9 +251,7 @@
         function syncTitle() { 
             const s = document.getElementById('gameSelect'); 
             document.getElementById('gameName').innerText = s.options[s.selectedIndex].text;
-            const h = 40 + Math.random() * 50;
-            document.getElementById('meter-fill').style.width = h + '%';
-            document.getElementById('meter-val').innerText = Math.floor(h) + '%';
+            updateMeter(s.value);
         }
     </script>
 </body>
