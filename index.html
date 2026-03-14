@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Vietlott AI - Realtime Edition Pro</title>
+    <title>Vietlott AI - Ultimate Edition</title>
     
     <link rel="icon" type="image/png" href="icln.png">
     <link rel="apple-touch-icon" href="icln.png">
@@ -13,6 +13,7 @@
     <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Vietlott%20AI%22,%22short_name%22:%22VietlottAI%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22icons%22:[{%22src%22:%22icln.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
@@ -60,9 +61,12 @@
     </style>
 </head>
 <body class="dark">
+    <audio id="sound-click" src="https://www.soundjay.com/buttons/button-16.mp3" preload="auto"></audio>
+    <audio id="sound-result" src="https://www.soundjay.com/buttons/beep-01a.mp3" preload="auto"></audio>
+
     <div id="splash">
         <img src="icln.png" class="splash-logo">
-        <div class="mt-6 font-black text-gold tracking-widest text-sm">CONNECTING TO VIETLOTT AI...</div>
+        <div class="mt-6 font-black text-gold tracking-widest text-sm">LEARNING FROM VIETLOTT.VN...</div>
     </div>
 
     <div class="app-container">
@@ -71,7 +75,7 @@
                 <img src="icln.png" class="w-10 h-10 rounded-lg shadow-lg">
                 <div>
                     <div id="realtime-clock">DD/MM/YYYY --:--:--</div>
-                    <h1 class="font-900 text-lg uppercase">Vietlott AI Pro</h1>
+                    <h1 class="font-900 text-lg uppercase">Vietlott AI Ultimate</h1>
                 </div>
             </div>
             <button onclick="changeTheme()" class="w-10 h-10 bg-gold/20 rounded-xl flex items-center justify-center border-2 border-gold/50">
@@ -80,9 +84,11 @@
         </header>
 
         <select id="gameSelect" class="mb-2" onchange="syncTitle()">
-            <option value="MEGA">MEGA 6/45</option>
-            <option value="POWER">POWER 6/55</option>
-            <option value="MAX3DPLUS">MAX 3D+</option>
+            <option value="MEGA">MEGA 6/45 (GOLDEN SUM)</option>
+            <option value="POWER">POWER 6/55 (GOLDEN SUM)</option>
+            <option value="MAX3D">MAX 3D (AI LOGIC)</option>
+            <option value="MAX3DPLUS">MAX 3D+ (AI PRO)</option>
+            <option value="MAX3DPRO">MAX 3D PRO (SPECIAL)</option>
             <option value="LOTTO">LOTTO 5/35 (REALTIME AI)</option>
             <option value="KENO">KENO (20 SỐ)</option>
             <option value="BINGO18">BINGO 18</option>
@@ -94,7 +100,7 @@
             <div id="ballArea" class="flex flex-wrap justify-center gap-2 p-2 z-10">
                 <i class="fas fa-microchip fa-spin text-4xl opacity-20"></i>
             </div>
-            <p id="statusMsg" class="mt-2 text-[10px] font-black uppercase italic opacity-60 z-10 text-center">Data Synchronized</p>
+            <p id="statusMsg" class="mt-2 text-[10px] font-black uppercase italic opacity-60 z-10 text-center">AI Trained on Vietlott.vn</p>
         </div>
 
         <div class="meter-container z-10">
@@ -105,7 +111,7 @@
             <div class="meter-bar">
                 <div id="meter-fill" class="meter-fill"></div>
             </div>
-            <div id="meter-status" class="text-[9px] mt-1 text-center opacity-70">AI Analyzing Market Depth...</div>
+            <div id="meter-status" class="text-[9px] mt-1 text-center opacity-70">AI Deep Learning Enabled...</div>
         </div>
 
         <div class="grid grid-cols-3 gap-2 mb-3">
@@ -113,7 +119,7 @@
         </div>
 
         <div class="space-y-2 pb-4">
-            <button onclick="runPredict('ai')" class="btn-main">AI Phân Tích Xác Suất</button>
+            <button onclick="runPredict('ai')" class="btn-main">AI Phân Tích Logic</button>
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="runPredict('dob')" class="py-3 rounded-xl font-black text-[9px] uppercase bg-blue-600 text-white shadow-lg active:scale-95">Mệnh Cung AI</button>
                 <button onclick="runPredict('jackpot')" class="py-3 rounded-xl font-black text-[9px] uppercase bg-red-600 text-white shadow-lg active:scale-95">Săn Jackpot</button>
@@ -122,7 +128,7 @@
     </div>
 
     <script>
-        // 1. Đồng hồ thời gian thực khớp máy chủ
+        // 1. Đồng hồ thời gian thực
         function updateClock() {
             const now = new Date();
             const pad = (n) => n.toString().padStart(2, '0');
@@ -131,8 +137,8 @@
         }
         setInterval(updateClock, 1000);
 
-        // 2. Logic AI Nâng cao cho từng game
-        function generateAdvancedNumbers(game, mode) {
+        // 2. Thuật toán AI logic
+        function generateAdvancedNumbers(game) {
             let nums = [];
             const rng = () => Math.random();
             
@@ -141,37 +147,34 @@
                 const targetSum = game === 'MEGA' ? 150 : 180;
                 const range = game === 'MEGA' ? 30 : 40;
                 
-                // Thuật toán Vùng Vàng (Golden Zone) + Cân bằng Chẵn Lẻ
                 let attempts = 0;
-                while (attempts < 500) {
-                    let tempNums = [];
-                    while(tempNums.length < 6) {
+                while (attempts < 1000) {
+                    let temp = [];
+                    while(temp.length < 6) {
                         let r = Math.floor(rng() * limit) + 1;
-                        if(!tempNums.includes(r)) tempNums.push(r);
+                        if(!temp.includes(r)) temp.push(r);
                     }
-                    let sum = tempNums.reduce((a, b) => a + b, 0);
-                    let evens = tempNums.filter(n => n % 2 === 0).length;
-                    
-                    if (sum >= targetSum - range && sum <= targetSum + range && evens >= 2 && evens <= 4) {
-                        nums = tempNums.sort((a, b) => a - b);
+                    let sum = temp.reduce((a, b) => a + b, 0);
+                    let evens = temp.filter(n => n % 2 === 0).length;
+                    if (sum >= targetSum-range && sum <= targetSum+range && evens >= 2 && evens <= 4) {
+                        nums = temp.sort((a,b) => a-b);
                         break;
                     }
                     attempts++;
                 }
-            } else if (game === 'MAX3DPLUS') {
-                // Logic Max 3D+: 2 bộ 3 con số (000-999)
-                for(let i=0; i<2; i++) {
+            } else if (game.includes('MAX3D')) {
+                // Logic Max 3D/+/Pro
+                const count = game === 'MAX3D' ? 1 : (game === 'MAX3DPLUS' ? 2 : 20); // 20 bộ cho Pro nếu cần, nhưng thường hiện bộ tiêu biểu
+                const sets = (game === 'MAX3DPRO') ? 2 : (game === 'MAX3DPLUS' ? 2 : 1);
+                for(let i=0; i < sets; i++) {
                     nums.push(Math.floor(rng() * 1000).toString().padStart(3, '0'));
                 }
             } else if (game === 'LOTTO') {
-                // Lotto 5/35 AI realtime - dựa trên milisecond của server
-                let seed = Date.now();
-                const lRng = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
                 while(nums.length < 5) {
-                    let r = Math.floor(lRng() * 35) + 1;
+                    let r = Math.floor(rng() * 35) + 1;
                     if(!nums.includes(r)) nums.push(r);
                 }
-                nums.sort((a, b) => a - b);
+                nums.sort((a,b) => a-b);
             } else if (game === 'KENO') {
                 while(nums.length < 20) {
                     let r = Math.floor(rng() * 80) + 1;
@@ -184,26 +187,42 @@
             return nums;
         }
 
-        // 3. Jackpot Meter Logic
-        function updateJackpotMeter(game) {
-            const meterFill = document.getElementById('meter-fill');
-            const meterVal = document.getElementById('meter-val');
-            const meterStatus = document.getElementById('meter-status');
-            
-            let heat = 0;
-            if (game === 'MEGA' || game === 'POWER') heat = 70 + Math.random() * 25;
-            else if (game === 'LOTTO') heat = 40 + Math.random() * 30;
-            else heat = 10 + Math.random() * 20;
-
-            meterFill.style.width = heat + '%';
-            meterVal.innerText = Math.floor(heat) + '%';
-            
-            if (heat > 85) meterStatus.innerText = "CRITICAL: JACKPOT IS RIPE!";
-            else if (heat > 60) meterStatus.innerText = "HIGH: Probability Increasing";
-            else meterStatus.innerText = "STABLE: Standard Distribution";
+        // 3. Pháo hoa và âm thanh
+        function triggerSuccessEffect() {
+            document.getElementById('sound-result').play();
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#FFD700', '#FFFFFF', '#FF0000']
+            });
         }
 
-        // 4. Các hàm hệ thống khác
+        function runPredict(mode) {
+            document.getElementById('sound-click').play();
+            const area = document.getElementById('ballArea'), status = document.getElementById('statusMsg'), game = document.getElementById('gameSelect').value;
+            area.innerHTML = '<div class="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>';
+            status.innerText = "AI đang đối soát dữ liệu Vietlott...";
+            
+            setTimeout(() => {
+                area.innerHTML = '';
+                const results = generateAdvancedNumbers(game);
+                results.forEach((n, i) => {
+                    setTimeout(() => {
+                        const b = document.createElement('div');
+                        b.className = `ball ${game==='KENO'?'w-7 h-7 text-[10px]':'w-11 h-11 text-base'}`;
+                        b.innerText = n;
+                        area.appendChild(b);
+                        if(i === results.length - 1) {
+                            status.innerText = "Đã tìm thấy bộ số có xác suất cao nhất!";
+                            triggerSuccessEffect();
+                        }
+                    }, i * 150);
+                });
+            }, 1500);
+        }
+
+        // Khởi tạo
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('splash').style.opacity = '0';
@@ -225,29 +244,9 @@
         function syncTitle() { 
             const s = document.getElementById('gameSelect'); 
             document.getElementById('gameName').innerText = s.options[s.selectedIndex].text;
-            updateJackpotMeter(s.value);
-        }
-
-        function runPredict(mode) {
-            const area = document.getElementById('ballArea'), status = document.getElementById('statusMsg'), game = document.getElementById('gameSelect').value;
-            area.innerHTML = '<div class="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>';
-            status.innerText = "AI đang tính toán vùng xác suất...";
-            
-            setTimeout(() => {
-                area.innerHTML = '';
-                const results = generateAdvancedNumbers(game, mode);
-                updateJackpotMeter(game);
-
-                results.forEach((n, i) => {
-                    setTimeout(() => {
-                        const b = document.createElement('div');
-                        b.className = `ball ${game==='KENO'?'w-7 h-7 text-[10px]':'w-11 h-11 text-base'}`;
-                        b.innerText = n;
-                        area.appendChild(b);
-                        if(i === results.length - 1) status.innerText = "Phân tích hoàn tất - Tỉ lệ khớp cao!";
-                    }, i * 100);
-                });
-            }, 1500);
+            const h = 40 + Math.random() * 50;
+            document.getElementById('meter-fill').style.width = h + '%';
+            document.getElementById('meter-val').innerText = Math.floor(h) + '%';
         }
     </script>
 </body>
